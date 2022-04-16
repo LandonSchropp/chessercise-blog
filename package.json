@@ -18,16 +18,20 @@
   "dependencies": {
     "@mdx-js/mdx": "^1.6.22",
     "@mdx-js/react": "^1.6.22",
+    "autoprefixer": "^10.4.4",
     "gatsby": "^4.12.1",
     "gatsby-plugin-google-analytics": "^4.12.1",
     "gatsby-plugin-manifest": "^4.12.1",
     "gatsby-plugin-mdx": "^3.12.1",
+    "gatsby-plugin-postcss": "^5.12.1",
     "gatsby-plugin-react-helmet": "^5.12.1",
     "gatsby-plugin-sitemap": "^5.12.1",
     "gatsby-source-filesystem": "^4.12.1",
+    "postcss": "^8.4.12",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-helmet": "^6.1.0"
+    "react-helmet": "^6.1.0",
+    "tailwindcss": "^3.0.24"
   },
   "devDependencies": {
     "@types/node": "^17.0.23",
