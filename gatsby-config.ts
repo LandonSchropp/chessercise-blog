@@ -7,7 +7,7 @@ const config: GatsbyConfig = {
   },
   plugins: [
     {
-      resolve: 'gatsby-plugin-google-analytics',
+      resolve: "gatsby-plugin-google-analytics",
       options: {
         "trackingId": "XXX"
       }
@@ -15,14 +15,14 @@ const config: GatsbyConfig = {
     "gatsby-plugin-react-helmet",
     "gatsby-plugin-sitemap",
     {
-      resolve: 'gatsby-plugin-manifest',
+      resolve: "gatsby-plugin-manifest",
       options: {
         "icon": "src/images/icon.png"
       }
     },
     "gatsby-plugin-mdx",
     {
-      resolve: 'gatsby-source-filesystem',
+      resolve: "gatsby-source-filesystem",
       options: {
         "name": "pages",
         "path": "./src/pages/"
