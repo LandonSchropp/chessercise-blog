@@ -1,6 +1,4 @@
-import type { GatsbyConfig } from "gatsby";
-
-const config: GatsbyConfig = {
+module.exports = {
   siteMetadata: {
     title: `Chessercise Blog`,
     siteUrl: `https://blog.chessercise.xyz`
@@ -31,5 +29,3 @@ const config: GatsbyConfig = {
     `gatsby-plugin-postcss`
   ]
 };
-
-export default config;
