@@ -1,3 +1,8 @@
+let _ = require("lodash");
+const defaultTheme = require("tailwindcss/defaultTheme");
+
+const BASE_SPACING = 1.25 / 4;
+
 module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}"
@@ -27,7 +32,10 @@ module.exports = {
       sans: [ "Open Sans", "sans-serif" ],
       serif: [ "Gentium Book Basic", "serif" ],
       mono: [ "Source Code Pro", "monospace" ]
-    }
+    },
+    spacing: _.mapValues(defaultTheme.spacing, (value, key) => {
+      return /^[\d.]+$/.test(key) ? `${ parseFloat(key) * BASE_SPACING }rem` : value;
+    })
   },
   plugins: []
 };
