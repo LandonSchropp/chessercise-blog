@@ -1,0 +1,5 @@
+@layer base {
+  cite {
+    @apply block italic before:content-['—']
+  }
+}

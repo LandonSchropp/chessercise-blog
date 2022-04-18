@@ -1,3 +1,12 @@
+@import "./anchor.css";
+@import "./blockquote.css";
+@import "./cite.css";
+@import "./headers.css";
+@import "./horizontal-rule.css";
+@import "./image.css";
+@import "./lists.css";
+@import "./paragraph.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

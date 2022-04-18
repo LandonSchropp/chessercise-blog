@@ -1,0 +1,5 @@
+@layer base {
+  p {
+    @apply my-4;
+  }
+}

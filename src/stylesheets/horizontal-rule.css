@@ -1,0 +1,5 @@
+@layer base {
+  hr {
+    @apply h-[2px] bg-mineShaft opacity-20;
+  }
+}

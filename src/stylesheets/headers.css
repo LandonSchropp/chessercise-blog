@@ -1,0 +1,17 @@
+@layer base {
+  h1, h2, h3, h4 {
+    @apply text-blackOut my-4 font-sans;
+  }
+
+  h1 {
+    @apply font-extrabold text-xl md:text-2xl;
+  }
+
+  h2 {
+    @apply font-extrabold md:text-xl;
+  }
+
+  h3 {
+    @apply font-extrabold md:text-lg;
+  }
+}

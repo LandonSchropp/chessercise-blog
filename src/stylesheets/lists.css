@@ -1,0 +1,21 @@
+/*
+TODO: In the future, I can get rid of all of the custom bullet and number codes and use the ::marker
+pseudoelement. However, that's not currently supported by all browsers.
+*/
+@layer base {
+  ol, ul {
+    @apply my-4 pl-4 marker:text-mediumPurple;
+  }
+
+  ol {
+    @apply list-decimal;
+  }
+
+  ul {
+    @apply list-disc;
+  }
+
+  li {
+    @apply my-2;
+  }
+}

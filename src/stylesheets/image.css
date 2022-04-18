@@ -1,0 +1,5 @@
+@layer base {
+  img {
+    @apply block max-w-full my-auto;
+  }
+}
