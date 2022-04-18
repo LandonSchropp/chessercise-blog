@@ -20,7 +20,7 @@ export function Layout({ children }: LayoutProps) {
       />
 
       { /* Increase the font size as the screen gets larger. */ }
-      <html className="text-[18px] lg:text-[20px] xl:text-[22px]" />
+      <html className="text-[18px] lg:text-[20px] xl:text-[22px] font-serif" />
     </Helmet>
     { children }
   </main>;
