@@ -1,5 +1,6 @@
 @layer utilities {
   .thick-left-border {
-    @apply border-l-[3px] border-l-mediumPurple pl-[calc(theme(space.4)-3px)];
+    /* TODO: Figure out how I can set the default to mediumPurple and override it elsewhere. */
+    @apply border-l-[3px] pl-[calc(theme(spacing.4)-3px)];
   }
 }

@@ -8,6 +8,7 @@
 @import "./base/paragraph.css";
 
 @import "./utilities/thick-left-border.css";
+@import "./utilities/border-shadow.css";
 
 @tailwind base;
 @tailwind components;

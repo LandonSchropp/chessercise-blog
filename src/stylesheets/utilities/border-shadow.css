@@ -1,0 +1,5 @@
+@layer utilities {
+  .border-shadow {
+    @apply bg-bleach shadow-[0_0_0_theme(spacing.2)_theme(colors.bleach)]
+  }
+}

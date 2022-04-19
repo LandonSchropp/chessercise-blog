@@ -1,6 +1,6 @@
 @layer base {
   h1, h2, h3, h4 {
-    @apply text-blackOut my-4 font-sans;
+    @apply text-blackOut my-4 font-sans font-bold;
   }
 
   h1 {
@@ -8,10 +8,10 @@
   }
 
   h2 {
-    @apply font-extrabold md:text-xl;
+    @apply md:text-xl;
   }
 
   h3 {
-    @apply font-extrabold md:text-lg;
+    @apply md:text-lg;
   }
 }

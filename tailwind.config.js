@@ -1,4 +1,4 @@
-let _ = require("lodash");
+const _ = require("lodash");
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 const BASE_SPACING = 1.25 / 4;
@@ -15,7 +15,9 @@ module.exports = {
         current: colors.current,
         transparent: colors.transparent,
 
+        cornflowerBlue: "#627ff6",
         mediumPurple: "#836fdd",
+        amethyst: "#955fc2",
 
         blackOut: "#1b1c21",
         mineShaft: "#292b33",
