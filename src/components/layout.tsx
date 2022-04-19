@@ -6,7 +6,7 @@ type LayoutProps = {
 };
 
 export function Layout({ children }: LayoutProps) {
-  return <main className="container mx-auto px-4 max-w-screen-md">
+  return <main className="container mx-auto px-4 max-w-screen-md w-fit">
     <Helmet>
       { /* Google Fonts */ }
       <link rel="preconnect" href="https://fonts.googleapis.com" />
