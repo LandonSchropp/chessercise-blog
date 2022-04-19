@@ -1,6 +1,5 @@
 @layer base {
   blockquote {
-    /* @apply my-4 border-l-mediumPurple; */
-    @apply my-4 border-l-[3px] border-l-mediumPurple pl-[calc(theme(space.4)-3px)];
+    @apply my-4 thick-left-border;
   }
 }

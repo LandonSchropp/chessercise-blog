@@ -7,6 +7,8 @@
 @import "./base/lists.css";
 @import "./base/paragraph.css";
 
+@import "./utilities/thick-left-border.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
