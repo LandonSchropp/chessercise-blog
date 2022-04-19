@@ -1,11 +1,11 @@
-@import "./anchor.css";
-@import "./blockquote.css";
-@import "./cite.css";
-@import "./headers.css";
-@import "./horizontal-rule.css";
-@import "./image.css";
-@import "./lists.css";
-@import "./paragraph.css";
+@import "./base/anchor.css";
+@import "./base/blockquote.css";
+@import "./base/cite.css";
+@import "./base/headers.css";
+@import "./base/horizontal-rule.css";
+@import "./base/image.css";
+@import "./base/lists.css";
+@import "./base/paragraph.css";
 
 @tailwind base;
 @tailwind components;
