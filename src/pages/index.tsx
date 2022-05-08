@@ -18,7 +18,7 @@ function Header() {
       Chessercise
     </h1>
     <p className="my-0 italic">
-      Things I've learned about the game of chess
+      Things I&apos;ve learned about the game of chess
     </p>
     <p className="my-0 italic">
       <a className="text-inherit" href="https://landonschropp.co">Landon&nbsp;Schropp</a>
