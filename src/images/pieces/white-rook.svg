@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="464px" height="464px" viewBox="0 0 464 464" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>pieces/white-rook</title>
+    <g id="pieces/white-rook" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Path" stroke="#333333" stroke-width="15.4666667" fill="#FFFFFF" stroke-linejoin="round" points="92.8 389.511111 371.2 389.511111 371.2 358.577778 92.8 358.577778"></polygon>
+        <polygon id="Path" stroke="#333333" stroke-width="15.4666667" fill="#FFFFFF" stroke-linejoin="round" points="123.733333 358.577778 123.733333 317.333333 340.266667 317.333333 340.266667 358.577778"></polygon>
+        <polyline id="Path" stroke="#333333" stroke-width="15.4666667" fill="#FFFFFF" stroke-linejoin="round" points="113.422222 131.733333 113.422222 80.1777778 154.666667 80.1777778 154.666667 100.8 206.222222 100.8 206.222222 80.1777778 257.777778 80.1777778 257.777778 100.8 309.333333 100.8 309.333333 80.1777778 350.577778 80.1777778 350.577778 131.733333"></polyline>
+        <polyline id="Path" stroke="#333333" stroke-width="15.4666667" fill="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" points="350.577778 131.733333 319.644444 163.733333 144.355556 163.733333 113.422222 131.733333"></polyline>
+        <polyline id="Path" stroke="#333333" stroke-width="15.4666667" fill="#FFFFFF" points="319.644444 162.666667 319.644444 291.555556 144.355556 291.555556 144.355556 162.666667"></polyline>
+        <polyline id="Path" stroke="#333333" stroke-width="15.4666667" fill="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" points="319.644444 291.555556 335.111111 317.333333 128.888889 317.333333 144.355556 291.555556"></polyline>
+        <line x1="113.422222" y1="131.733333" x2="350.577778" y2="131.733333" id="Path" stroke="#333333" stroke-width="15.4666667" stroke-linecap="round"></line>
+    </g>
+</svg>

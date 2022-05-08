@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="464px" height="464px" viewBox="0 0 464 464" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>pieces/black-rook</title>
+    <g id="pieces/black-rook" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Path" stroke="#212121" stroke-width="15.4666667" fill="#212121" stroke-linejoin="round" points="92.8 399.822222 371.2 399.822222 371.2 368.888889 92.8 368.888889"></polygon>
+        <polygon id="Path" stroke="#212121" stroke-width="15.4666667" fill="#212121" stroke-linejoin="round" points="128.888889 327.644444 144.355556 301.866667 319.644444 301.866667 335.111111 327.644444"></polygon>
+        <polygon id="Path" stroke="#212121" stroke-width="15.4666667" fill="#212121" stroke-linejoin="round" points="123.733333 368.888889 123.733333 327.644444 340.266667 327.644444 340.266667 368.888889"></polygon>
+        <polygon id="Path" stroke="#212121" stroke-width="15.4666667" fill="#212121" points="144.355556 301.866667 144.355556 167.822222 319.644444 167.822222 319.644444 301.866667"></polygon>
+        <polygon id="Path" stroke="#212121" stroke-width="15.4666667" fill="#212121" stroke-linejoin="round" points="144.355556 167.822222 113.422222 142.044444 350.577778 142.044444 319.644444 167.822222"></polygon>
+        <polygon id="Path" stroke="#212121" stroke-width="15.4666667" fill="#212121" stroke-linejoin="round" points="113.422222 142.044444 113.422222 90.4888889 154.666667 90.4888889 154.666667 111.111111 206.222222 111.111111 206.222222 90.4888889 257.777778 90.4888889 257.777778 111.111111 309.333333 111.111111 309.333333 90.4888889 350.577778 90.4888889 350.577778 142.044444"></polygon>
+        <polyline id="Path" stroke="#F2F2F2" stroke-width="10.3111111" stroke-linecap="round" points="123.733333 363.733333 340.266667 363.733333 340.266667 363.733333"></polyline>
+        <line x1="134.044444" y1="322.488889" x2="329.955556" y2="322.488889" id="Path" stroke="#F2F2F2" stroke-width="10.3111111" stroke-linecap="round"></line>
+        <line x1="144.355556" y1="301.866667" x2="319.644444" y2="301.866667" id="Path" stroke="#F2F2F2" stroke-width="10.3111111" stroke-linecap="round"></line>
+        <line x1="144.355556" y1="167.822222" x2="319.644444" y2="167.822222" id="Path" stroke="#F2F2F2" stroke-width="10.3111111" stroke-linecap="round"></line>
+        <line x1="113.422222" y1="142.044444" x2="350.577778" y2="142.044444" id="Path" stroke="#F2F2F2" stroke-width="10.3111111" stroke-linecap="round"></line>
+    </g>
+</svg>

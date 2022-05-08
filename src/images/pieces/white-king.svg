@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="464px" height="464px" viewBox="0 0 464 464" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>pieces/white-king</title>
+    <g id="pieces/white-king" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <line x1="232" y1="127.918222" x2="232" y2="69.8666667" id="Path" stroke="#333333" stroke-width="15.4666667" stroke-linecap="round"></line>
+        <line x1="206.222222" y1="90.4888889" x2="257.777778" y2="90.4888889" id="Path" stroke="#333333" stroke-width="15.4666667" stroke-linecap="round"></line>
+        <path d="M232,265.777778 C232,265.777778 278.4,188.444444 262.933333,157.511111 C262.933333,157.511111 252.622222,131.733333 232,131.733333 C211.377778,131.733333 201.066667,157.511111 201.066667,157.511111 C185.6,188.444444 232,265.777778 232,265.777778" id="Path" stroke="#333333" stroke-width="15.4666667" fill="#FFFFFF" fill-rule="nonzero"></path>
+        <path d="M128.888889,389.511111 C185.6,425.6 278.4,425.6 335.111111,389.511111 L335.111111,317.333333 C335.111111,317.333333 427.911111,270.933333 396.977778,209.066667 C355.733333,142.044444 257.777778,172.977778 232,250.311111 L232,286.4 L232,250.311111 C206.222222,172.977778 108.266667,142.044444 67.0222222,209.066667 C36.0888889,270.933333 128.888889,317.333333 128.888889,317.333333 L128.888889,389.511111" id="Path" stroke="#333333" stroke-width="15.4666667" fill="#FFFFFF" fill-rule="nonzero" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path d="M128.888889,317.333333 C185.6,286.4 278.4,286.4 335.111111,317.333333" id="Path" stroke="#333333" stroke-width="15.4666667" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path d="M128.888889,353.422222 C185.6,322.488889 278.4,322.488889 335.111111,353.422222" id="Path" stroke="#333333" stroke-width="15.4666667" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path d="M128.888889,389.511111 C185.6,358.577778 278.4,358.577778 335.111111,389.511111" id="Path" stroke="#333333" stroke-width="15.4666667" stroke-linecap="round" stroke-linejoin="round"></path>
+    </g>
+</svg>
