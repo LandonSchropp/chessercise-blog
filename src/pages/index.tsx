@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { ArticleSummary } from "../components/article-summary";
 import { Layout } from "../components/layout";
+import { SimpleChessboard } from "../components/simple-chessboard/simple-chessboard";
 
 const ARTICLE = {
   title: "Awesome Git Aliases",
@@ -30,6 +31,9 @@ export default function IndexPage() {
   return <Layout>
     <Header />
     <section className="my-8">
+      <SimpleChessboard
+        fen="rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"
+      />
       <ArticleSummary article={ ARTICLE } index={ 0 } numberOfArticles={ 5 } />
       <ArticleSummary article={ ARTICLE } index={ 1 } numberOfArticles={ 5 } />
       <ArticleSummary article={ ARTICLE } index={ 2 } numberOfArticles={ 5 } />
