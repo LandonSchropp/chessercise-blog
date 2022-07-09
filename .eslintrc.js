@@ -6,5 +6,8 @@ module.exports = {
     es6: true,
     browser: true,
     jest: true
+  },
+  rules: {
+    "react/default-props-match-prop-types": "off"
   }
 };
