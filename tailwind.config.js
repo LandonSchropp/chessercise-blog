@@ -19,6 +19,7 @@ module.exports = {
         mediumPurple: "#836fdd",
         amethyst: "#955fc2",
 
+        // TODO: Clean up the newly-added colors
         blackOut: "#1b1c21",
         mineShaft: "#292b33",
         emperor: "#484a54",

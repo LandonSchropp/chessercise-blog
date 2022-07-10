@@ -19,11 +19,11 @@ function Header() {
       Chessercise
     </h1>
     <p className="my-0 italic">
-      Things I&apos;ve learned about the game of chess
+      A blog by
+      { " " }
+      <a className="text-inherit underline" href="https://landonschropp.co">Landon&nbsp;Schropp</a>
     </p>
-    <p className="my-0 italic">
-      <a className="text-inherit" href="https://landonschropp.co">Landon&nbsp;Schropp</a>
-    </p>
+    <p className="my-0 italic" />
   </header>;
 }
 
@@ -32,6 +32,7 @@ export default function IndexPage() {
     <Header />
     <section className="my-8">
       <SimpleChessboard
+        coordinates="inside"
         fen="rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"
       />
       <ArticleSummary article={ ARTICLE } index={ 0 } numberOfArticles={ 5 } />

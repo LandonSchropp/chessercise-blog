@@ -1,9 +1,9 @@
 import _ from "lodash";
 import React from "react";
 
-import { BLACK, EMPTY_POSITION, WHITE } from "../../constants";
-import { BOARD_SIZE, SQUARE_SIZE } from "./simple-chessboard-constants";
-// import { SimpleChessboardCoordinates } from "./simple-chessboard-coordinates";
+import { EMPTY_POSITION, WHITE } from "../../constants";
+import { SQUARE_SIZE } from "./simple-chessboard-constants";
+import { SimpleChessboardCoordinates } from "./simple-chessboard-coordinates";
 // import { SimpleChessboardPieceOverlay } from "./simple-chessboard-piece-overlay";
 // import { SimpleChessboardPieces } from "./simple-chessboard-pieces";
 import { SimpleChessboardSquares } from "./simple-chessboard-squares";
@@ -34,6 +34,12 @@ export function SimpleChessboard({ fen, coordinates, orientation }: SimpleChessb
   return <svg viewBox={ `0 0 ${ viewBoxWidth } ${ viewBoxHeight }` }>;
     <SimpleChessboardSquares
       inset={ inset }
+      numberOfRanks={ numberOfRanks }
+      numberOfFiles={ numberOfFiles }
+    />
+    <SimpleChessboardCoordinates
+      orientation={ orientation }
+      coordinates={ coordinates }
       numberOfRanks={ numberOfRanks }
       numberOfFiles={ numberOfFiles }
     />
