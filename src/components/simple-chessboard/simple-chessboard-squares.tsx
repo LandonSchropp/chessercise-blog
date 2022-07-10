@@ -3,7 +3,7 @@
 import _ from "lodash";
 import React from "react";
 
-import { NUMBER_OF_SQUARES, SQUARE_SIZE } from "./simple-chessboard-constants";
+import { SQUARE_SIZE } from "./simple-chessboard-constants";
 
 type SquareProps = {
   fileIndex: number,
@@ -26,14 +26,22 @@ function Square({ fileIndex, rankIndex, inset }: SquareProps) {
   />;
 }
 
+type SimpleChessboardSquaresType = {
+inset: boolean,
+  numberOfRanks: number,
+  numberOfFiles: number
+}
+
 /**
  * Returns the squares for a SimpleChessboard.
  */
-export function SimpleChessboardSquares({ inset }: {inset: boolean}) {
+export function SimpleChessboardSquares(
+  { inset, numberOfRanks, numberOfFiles }: SimpleChessboardSquaresType
+) {
   return <g className="simple-chessboard__squares">
     {
-      _.times(NUMBER_OF_SQUARES, (fileIndex) => {
-        return _.times(NUMBER_OF_SQUARES, (rankIndex) => {
+      _.times(numberOfFiles, (fileIndex) => {
+        return _.times(numberOfRanks, (rankIndex) => {
           return <Square
             key={ rankIndex }
             fileIndex={ fileIndex }

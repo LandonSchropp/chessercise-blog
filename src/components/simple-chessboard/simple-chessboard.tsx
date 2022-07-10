@@ -22,12 +22,21 @@ export function SimpleChessboard({ fen, coordinates, orientation }: SimpleChessb
   // Ensure the position is always populated.
   fen = _.isNil(fen) ? EMPTY_POSITION : fen;
 
+  // TODO: Determine these properties from the FEN.
+  const numberOfRanks = 4;
+  const numberOfFiles = 6;
+
   const inset = coordinates === "outside";
-  const viewBoxSize = inset ? SQUARE_SIZE * 9 : BOARD_SIZE;
+  const viewBoxWidth = SQUARE_SIZE * (numberOfFiles + (inset ? 1 : 0));
+  const viewBoxHeight = SQUARE_SIZE * (numberOfRanks + (inset ? 1 : 0));
 
   // TODO: Add a border.
-  return <svg viewBox={ `0 0 ${ viewBoxSize } ${ viewBoxSize }` }>;
-    <SimpleChessboardSquares inset={ inset } />
+  return <svg viewBox={ `0 0 ${ viewBoxWidth } ${ viewBoxHeight }` }>;
+    <SimpleChessboardSquares
+      inset={ inset }
+      numberOfRanks={ numberOfRanks }
+      numberOfFiles={ numberOfFiles }
+    />
   </svg>;
 }
 
