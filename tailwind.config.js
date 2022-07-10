@@ -27,6 +27,7 @@ module.exports = {
         cerebral: "#bec1cc",
         steam: "#d3d5de",
         bleach: "#ebecf2",
+        concrete: "#f2f2f2",
         white: "#fff"
       };
     },

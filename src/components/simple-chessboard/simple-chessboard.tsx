@@ -6,7 +6,7 @@ import { BOARD_SIZE, SQUARE_SIZE } from "./simple-chessboard-constants";
 // import { SimpleChessboardCoordinates } from "./simple-chessboard-coordinates";
 // import { SimpleChessboardPieceOverlay } from "./simple-chessboard-piece-overlay";
 // import { SimpleChessboardPieces } from "./simple-chessboard-pieces";
-// import { SimpleChessboardSquares } from "./simple-chessboard-squares";
+import { SimpleChessboardSquares } from "./simple-chessboard-squares";
 
 interface SimpleChessboardProps {
   fen?: string
@@ -25,7 +25,10 @@ export function SimpleChessboard({ fen, coordinates, orientation }: SimpleChessb
   const inset = coordinates === "outside";
   const viewBoxSize = inset ? SQUARE_SIZE * 9 : BOARD_SIZE;
 
-  return <svg viewBox={ `0 0 ${ viewBoxSize } ${ viewBoxSize }` } className="bg-mediumPurple" />;
+  // TODO: Add a border.
+  return <svg viewBox={ `0 0 ${ viewBoxSize } ${ viewBoxSize }` }>;
+    <SimpleChessboardSquares inset={ inset } />
+  </svg>;
 }
 
 SimpleChessboard.defaultProps = {
