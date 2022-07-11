@@ -1,33 +1,35 @@
+
+import {
+  BLACK_BISHOP,
+  BLACK_KING,
+  BLACK_KNIGHT,
+  BLACK_PAWN,
+  BLACK_QUEEN,
+  BLACK_ROOK,
+  WHITE_BISHOP,
+  WHITE_KING,
+  WHITE_KNIGHT,
+  WHITE_PAWN,
+  WHITE_QUEEN,
+  WHITE_ROOK
+} from "../../constants";
+
 export const NUMBER_OF_SQUARES = 8;
 export const SQUARE_SIZE = 100;
 export const BOARD_SIZE = SQUARE_SIZE * NUMBER_OF_SQUARES;
 
-// Chessmen constants (for use inside the library only).
-export const INTERNAL_WHITE_KING = 0;
-export const INTERNAL_WHITE_QUEEN = 1;
-export const INTERNAL_WHITE_ROOK = 2;
-export const INTERNAL_WHITE_BISHOP = 3;
-export const INTERNAL_WHITE_KNIGHT = 4;
-export const INTERNAL_WHITE_PAWN = 5;
-export const INTERNAL_BLACK_KING = 6;
-export const INTERNAL_BLACK_QUEEN = 7;
-export const INTERNAL_BLACK_ROOK = 8;
-export const INTERNAL_BLACK_BISHOP = 9;
-export const INTERNAL_BLACK_KNIGHT = 10;
-export const INTERNAL_BLACK_PAWN = 11;
-
 // The mappings of FEN symbols to the internal constants.
 export const FEN_PIECES = {
-  "k": INTERNAL_BLACK_KING,
-  "q": INTERNAL_BLACK_QUEEN,
-  "r": INTERNAL_BLACK_ROOK,
-  "b": INTERNAL_BLACK_BISHOP,
-  "n": INTERNAL_BLACK_KNIGHT,
-  "p": INTERNAL_BLACK_PAWN,
-  "K": INTERNAL_WHITE_KING,
-  "Q": INTERNAL_WHITE_QUEEN,
-  "R": INTERNAL_WHITE_ROOK,
-  "B": INTERNAL_WHITE_BISHOP,
-  "N": INTERNAL_WHITE_KNIGHT,
-  "P": INTERNAL_WHITE_PAWN
+  "k": BLACK_KING,
+  "q": BLACK_QUEEN,
+  "r": BLACK_ROOK,
+  "b": BLACK_BISHOP,
+  "n": BLACK_KNIGHT,
+  "p": BLACK_PAWN,
+  "K": WHITE_KING,
+  "Q": WHITE_QUEEN,
+  "R": WHITE_ROOK,
+  "B": WHITE_BISHOP,
+  "N": WHITE_KNIGHT,
+  "P": WHITE_PAWN
 };
