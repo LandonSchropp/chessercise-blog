@@ -23,15 +23,18 @@ export function SimpleChessboard({ fen, coordinates, orientation }: SimpleChessb
   fen = _.isNil(fen) ? EMPTY_POSITION : fen;
 
   // TODO: Determine these properties from the FEN.
-  const numberOfRanks = 4;
-  const numberOfFiles = 6;
+  const numberOfRanks = 8;
+  const numberOfFiles = 8;
 
   const inset = coordinates === "outside";
   const viewBoxWidth = SQUARE_SIZE * (numberOfFiles + (inset ? 1 : 0));
   const viewBoxHeight = SQUARE_SIZE * (numberOfRanks + (inset ? 1 : 0));
 
   // TODO: Add a border.
-  return <svg viewBox={ `0 0 ${ viewBoxWidth } ${ viewBoxHeight }` }>;
+  return <svg
+    className="max-w-sm mx-auto"
+    viewBox={ `0 0 ${ viewBoxWidth } ${ viewBoxHeight }` }
+  >;
     <SimpleChessboardSquares
       inset={ inset }
       numberOfRanks={ numberOfRanks }

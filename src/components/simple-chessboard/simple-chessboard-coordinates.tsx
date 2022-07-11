@@ -1,15 +1,15 @@
 import _ from "lodash";
 import React from "react";
 
-import { DARK_SQUARE, FILES, LIGHT_SQUARE, RANKS, WHITE } from "../../constants";
+import { BOARD_SIZE, DARK_SQUARE, FILES, LIGHT_SQUARE, RANKS, WHITE } from "../../constants";
+import { Player } from "../../types";
 import { SQUARE_SIZE } from "./simple-chessboard-constants";
 
-type Player = "white" | "black"
-type Position = "bottom" | "left" | "top" | "right"
 type Coordinates = "none" | "inside" | "outside"
+type Position = "bottom" | "left" | "top" | "right";
 
 const INSIDE_HORIZONTAL_OFFSET = SQUARE_SIZE / 32;
-const INSIDE_VERTIAL_OFFSET = SQUARE_SIZE * 3 / 64;
+const INSIDE_VERTIAL_OFFSET = SQUARE_SIZE * 2 / 32;
 
 type OutsideCoordinateProps = {
   orientation: Player,
@@ -91,7 +91,7 @@ function InsideCoordinate({
 
   const positionProps = position === "left"
     ? { "dominantBaseline": "hanging" }
-    : { "textAnchor": "end" };
+    : { "dominantBaseline": "text-bottom", "textAnchor": "end" };
 
   return <text
     className={ `font-sans ${ square === DARK_SQUARE ? "fill-concrete" : "fill-mediumPurple" }` }
@@ -165,6 +165,10 @@ export function SimpleChessboardCoordinates({
   numberOfRanks
 }: SimpleChessboardCoordinatesProps) {
   if (coordinates === "none") {
+    return null;
+  }
+
+  if (numberOfRanks !== BOARD_SIZE || numberOfFiles !== BOARD_SIZE) {
     return null;
   }
 
