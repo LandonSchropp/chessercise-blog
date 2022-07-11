@@ -19,7 +19,7 @@ function Header() {
       Chessercise
     </h1>
     <p className="my-0 italic">
-      A blog by
+      A chess blog by
       { " " }
       <a className="text-inherit underline" href="https://landonschropp.co">Landon&nbsp;Schropp</a>
     </p>
