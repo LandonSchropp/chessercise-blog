@@ -43,6 +43,34 @@ export const PIECES = [
   PAWN
 ];
 
+export const BLACK_KING = `${ BLACK }${ _.capitalize(KING) }`;
+export const BLACK_QUEEN = `${ BLACK }${ _.capitalize(QUEEN) }`;
+export const BLACK_ROOK = `${ BLACK }${ _.capitalize(ROOK) }`;
+export const BLACK_BISHOP = `${ BLACK }${ _.capitalize(BISHOP) }`;
+export const BLACK_KNIGHT = `${ BLACK }${ _.capitalize(KNIGHT) }`;
+export const BLACK_PAWN = `${ BLACK }${ _.capitalize(PAWN) }`;
+export const WHITE_KING = `${ WHITE }${ _.capitalize(KING) }`;
+export const WHITE_QUEEN = `${ WHITE }${ _.capitalize(QUEEN) }`;
+export const WHITE_ROOK = `${ WHITE }${ _.capitalize(ROOK) }`;
+export const WHITE_BISHOP = `${ WHITE }${ _.capitalize(BISHOP) }`;
+export const WHITE_KNIGHT = `${ WHITE }${ _.capitalize(KNIGHT) }`;
+export const WHITE_PAWN = `${ WHITE }${ _.capitalize(PAWN) }`;
+
+export const PLAYER_PIECES = [
+  BLACK_KING,
+  BLACK_QUEEN,
+  BLACK_ROOK,
+  BLACK_BISHOP,
+  BLACK_KNIGHT,
+  BLACK_PAWN,
+  WHITE_KING,
+  WHITE_QUEEN,
+  WHITE_ROOK,
+  WHITE_BISHOP,
+  WHITE_KNIGHT,
+  WHITE_PAWN
+];
+
 // Square colors
 export const LIGHT_SQUARE = "lightSquare";
 export const DARK_SQUARE = "darkSquare";
