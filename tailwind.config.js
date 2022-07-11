@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 const _ = require("lodash");
 const defaultTheme = require("tailwindcss/defaultTheme");
 
