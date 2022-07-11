@@ -2,7 +2,7 @@ import chroma from "chroma-js";
 import { Link } from "gatsby";
 import React from "react";
 
-import { Article } from "../types/article";
+import { Article } from "../types";
 
 const CORNFLOWER_BLUE = "#627ff6";
 const AMETHYST = "#955fc2";
