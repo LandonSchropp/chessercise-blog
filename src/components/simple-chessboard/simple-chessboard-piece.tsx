@@ -28,7 +28,7 @@ import WHITE_PAWN_IMAGE from "../../images/pieces/white-pawn.svg";
 import WHITE_QUEEN_IMAGE from "../../images/pieces/white-queen.svg";
 import WHITE_ROOK_IMAGE from "../../images/pieces/white-rook.svg";
 import { Coordinates, Player, PlayerPiece } from "../../types";
-import { orientIndices, reverseYIndex } from "../../utilities/squares";
+import { orientIndices } from "../../utilities/squares";
 import {
   NUMBER_OF_SQUARES,
   SQUARE_SIZE

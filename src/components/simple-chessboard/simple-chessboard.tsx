@@ -47,7 +47,6 @@ export function SimpleChessboard({ fen, coordinates, orientation }: SimpleChessb
     />
     <SimpleChessboardCoordinates
       orientation={ orientation }
-      coordinates={ coordinates }
       numberOfRanks={ numberOfRanks }
       numberOfFiles={ numberOfFiles }
     />
