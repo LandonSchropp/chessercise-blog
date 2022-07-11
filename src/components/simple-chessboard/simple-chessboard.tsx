@@ -4,8 +4,8 @@ import React from "react";
 import { EMPTY_POSITION, WHITE } from "../../constants";
 import { SQUARE_SIZE } from "./simple-chessboard-constants";
 import { SimpleChessboardCoordinates } from "./simple-chessboard-coordinates";
+import { SimpleChessboardPieces } from "./simple-chessboard-pieces";
 // import { SimpleChessboardPieceOverlay } from "./simple-chessboard-piece-overlay";
-// import { SimpleChessboardPieces } from "./simple-chessboard-pieces";
 import { SimpleChessboardSquares } from "./simple-chessboard-squares";
 
 interface SimpleChessboardProps {
@@ -15,7 +15,12 @@ interface SimpleChessboardProps {
 }
 
 /**
- * A super-simple chessboard implementation.
+ * A super-simple React chessboard.
+ * @param params.fen The FEN to render. If the FEN changes, then the chessboard automatically
+ * animates the change.
+ * @param params.coordinates Determies how the chessboard coordinates are rendered. This can be
+ * `"outside"`, `"inside"` or `"none"`.
+ * @param params.orientation Determines the direction the board should be oriented towards.
  */
 export function SimpleChessboard({ fen, coordinates, orientation }: SimpleChessboardProps) {
 
@@ -45,6 +50,10 @@ export function SimpleChessboard({ fen, coordinates, orientation }: SimpleChessb
       coordinates={ coordinates }
       numberOfRanks={ numberOfRanks }
       numberOfFiles={ numberOfFiles }
+    />
+    <SimpleChessboardPieces
+      orientation={ orientation }
+      position={ fen }
     />
   </svg>;
 }
