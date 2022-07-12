@@ -32,7 +32,6 @@ export default function IndexPage() {
     <Header />
     <section className="my-8">
       <SimpleChessboard
-        coordinates="inside"
         fen="2p/2kp/1Q/P"
       />
       <ArticleSummary article={ ARTICLE } index={ 0 } numberOfArticles={ 5 } />
