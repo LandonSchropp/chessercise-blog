@@ -2,6 +2,7 @@ import _ from "lodash";
 import React from "react";
 
 import { EMPTY_POSITION, WHITE } from "../../constants";
+import { parsedPositionSize, parsePosition } from "../../utilities/fen";
 import { SQUARE_SIZE } from "./simple-chessboard-constants";
 import { SimpleChessboardCoordinates } from "./simple-chessboard-coordinates";
 import { SimpleChessboardPieces } from "./simple-chessboard-pieces";
@@ -26,10 +27,10 @@ export function SimpleChessboard({ fen, coordinates, orientation }: SimpleChessb
 
   // Ensure the position is always populated.
   fen = _.isNil(fen) ? EMPTY_POSITION : fen;
+  const parsedPosition = parsePosition(fen);
 
   // TODO: Determine these properties from the FEN.
-  const numberOfRanks = 8;
-  const numberOfFiles = 8;
+  const [ numberOfRanks, numberOfFiles ] = parsedPositionSize(parsedPosition);
 
   const inset = coordinates === "outside";
   const viewBoxWidth = SQUARE_SIZE * (numberOfFiles + (inset ? 1 : 0));
