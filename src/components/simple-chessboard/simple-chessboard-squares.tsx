@@ -1,5 +1,3 @@
-// import { useDroppable } from "@dnd-kit/core";
-// import classNames from "classnames";
 import _ from "lodash";
 import React from "react";
 
@@ -12,13 +10,10 @@ type SquareProps = {
 };
 
 function Square({ fileIndex, rankIndex, inset }: SquareProps) {
-  // const { setNodeRef } = useDroppable({ id: "square" });
-
   const squareColor = (fileIndex + rankIndex) % 2 === 0 ? "fill-concrete" : "fill-mediumPurple";
 
   return <rect
     className={ squareColor }
-    // ref={ setNodeRef }
     x={ (fileIndex + (inset ? 0.5 : 0)) * SQUARE_SIZE }
     y={ (rankIndex + (inset ? 0.5 : 0)) * SQUARE_SIZE }
     width={ SQUARE_SIZE }

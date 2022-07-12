@@ -1,4 +1,3 @@
-import { useDraggable } from "@dnd-kit/core";
 import React, { LegacyRef } from "react";
 
 import {
@@ -67,12 +66,6 @@ export function SimpleChessboardPiece({
   orientation
 }: SimpleChessboardPieceProps) {
 
-  // Make the piece draggable.
-  const { attributes, listeners, setNodeRef } = useDraggable({
-    id: `${ rankIndex }-${ fileIndex }`,
-    data: { piece }
-  });
-
   if (piece === null) {
     return null;
   }
@@ -81,9 +74,6 @@ export function SimpleChessboardPiece({
   const coordinates = convertCoordinateToSVG([ fileIndex, rankIndex ], orientation);
 
   return <image
-    ref={ setNodeRef as LegacyRef<SVGImageElement> }
-    { ...listeners }
-    { ...attributes }
     x={ coordinates[0] }
     y={ coordinates[1] }
     width={ SQUARE_SIZE }
