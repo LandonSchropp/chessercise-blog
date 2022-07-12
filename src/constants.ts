@@ -76,3 +76,19 @@ export const LIGHT_SQUARE = "lightSquare";
 export const DARK_SQUARE = "darkSquare";
 
 export const SQUARE_COLORS = [ LIGHT_SQUARE, DARK_SQUARE ];
+
+// The mappings of FEN symbols to the internal constants.
+export const FEN_PIECES = {
+  "k": BLACK_KING,
+  "q": BLACK_QUEEN,
+  "r": BLACK_ROOK,
+  "b": BLACK_BISHOP,
+  "n": BLACK_KNIGHT,
+  "p": BLACK_PAWN,
+  "K": WHITE_KING,
+  "Q": WHITE_QUEEN,
+  "R": WHITE_ROOK,
+  "B": WHITE_BISHOP,
+  "N": WHITE_KNIGHT,
+  "P": WHITE_PAWN
+};
