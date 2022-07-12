@@ -29,10 +29,7 @@ import WHITE_QUEEN_IMAGE from "../../images/pieces/white-queen.svg";
 import WHITE_ROOK_IMAGE from "../../images/pieces/white-rook.svg";
 import { Player, PlayerPiece, Vector } from "../../types";
 import { orientIndices } from "../../utilities/squares";
-import {
-  NUMBER_OF_SQUARES,
-  SQUARE_SIZE
-} from "./simple-chessboard-constants";
+import { SQUARE_SIZE } from "./simple-chessboard-constants";
 
 // A mapping of the internal pieces to their corresponding images..
 export const PIECE_IMAGES = {
@@ -57,20 +54,18 @@ function convertCoordinateToSVG(coordinates: Vector, orientation: Player) {
 }
 
 type SimpleChessboardPieceProps = {
-  index: number,
+  rankIndex: number,
+  fileIndex: number,
   piece: PlayerPiece | null,
   orientation: Player
 }
 
 export function SimpleChessboardPiece({
-  index,
+  rankIndex,
+  fileIndex,
   piece,
   orientation
 }: SimpleChessboardPieceProps) {
-
-  // Determine the rank and file from the index.
-  const rankIndex = Math.floor(index / NUMBER_OF_SQUARES);
-  const fileIndex = index % NUMBER_OF_SQUARES;
 
   // Make the piece draggable.
   const { attributes, listeners, setNodeRef } = useDraggable({
