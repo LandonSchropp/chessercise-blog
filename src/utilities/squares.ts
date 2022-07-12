@@ -1,7 +1,7 @@
 import _ from "lodash";
 
 import { BOARD_SIZE, DARK_SQUARE, FILES, LIGHT_SQUARE, PLAYERS, RANKS, WHITE } from "../constants";
-import { Player, Vector } from "../types";
+import { Player, Square, Vector } from "../types";
 
 function validateIndices(indices: Vector) {
   if (!_.isArray(indices)) {
@@ -24,7 +24,7 @@ function validateIndices(indices: Vector) {
  * @param square A string representing the square's coordinates.
  * @return Returns an array of coordinates between 0–7 inclusive.
  */
-export function squareToIndices(square: string): Vector {
+export function squareToIndices(square: Square): Vector {
 
   if (!_.isString(square)) {
     throw new Error("The square must be a string.");
@@ -84,7 +84,7 @@ export function orientIndices(indices: Vector, orientation: Player): Vector {
  * @from A string representing the from square.
  * @to A string representing the to Square.
  */
-export function isKnightMove(from: string, to: string) {
+export function isKnightMove(from: Square, to: Square) {
   const fromIndices = squareToIndices(from);
   const toIndices = squareToIndices(to);
 
@@ -97,6 +97,6 @@ export function isKnightMove(from: string, to: string) {
 /**
  * Returns the color of the given square (light or dark).
  */
-export function squareColor(square: string) {
+export function squareColor(square: Square) {
   return _.sum(squareToIndices(square)) % 2 === 0 ? DARK_SQUARE : LIGHT_SQUARE;
 }
