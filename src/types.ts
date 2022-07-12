@@ -26,3 +26,5 @@ export type PlayerPiece =
   | "whiteBishop"
   | "whiteKnight"
   | "whitePawn";
+
+export type NullablePlayerPiece = PlayerPiece | null
