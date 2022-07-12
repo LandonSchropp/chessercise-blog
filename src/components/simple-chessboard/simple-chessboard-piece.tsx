@@ -27,7 +27,7 @@ import WHITE_KNIGHT_IMAGE from "../../images/pieces/white-knight.svg";
 import WHITE_PAWN_IMAGE from "../../images/pieces/white-pawn.svg";
 import WHITE_QUEEN_IMAGE from "../../images/pieces/white-queen.svg";
 import WHITE_ROOK_IMAGE from "../../images/pieces/white-rook.svg";
-import { Coordinates, Player, PlayerPiece } from "../../types";
+import { Player, PlayerPiece, Vector } from "../../types";
 import { orientIndices } from "../../utilities/squares";
 import {
   NUMBER_OF_SQUARES,
@@ -50,7 +50,7 @@ export const PIECE_IMAGES = {
   [BLACK_PAWN]: BLACK_PAWN_IMAGE
 };
 
-function convertCoordinateToSVG(coordinates: Coordinates, orientation: Player) {
+function convertCoordinateToSVG(coordinates: Vector, orientation: Player) {
   // const reversedCoordinates = reverseYIndex(coordinates);
   const orientedCoordinates = orientIndices(coordinates, orientation);
   return [ orientedCoordinates[0] * SQUARE_SIZE, orientedCoordinates[1] * SQUARE_SIZE ];

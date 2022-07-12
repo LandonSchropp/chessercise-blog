@@ -1,9 +1,9 @@
 import _ from "lodash";
 
 import { BOARD_SIZE, DARK_SQUARE, FILES, LIGHT_SQUARE, PLAYERS, RANKS, WHITE } from "../constants";
-import { Coordinates, Player } from "../types";
+import { Player, Vector } from "../types";
 
-function validateIndices(indices: Coordinates) {
+function validateIndices(indices: Vector) {
   if (!_.isArray(indices)) {
     throw new Error("The indices must be an array.");
   }
@@ -24,14 +24,14 @@ function validateIndices(indices: Coordinates) {
  * @param square A string representing the square's coordinates.
  * @return Returns an array of coordinates between 0–7 inclusive.
  */
-export function squareToIndices(square: string): Coordinates {
+export function squareToIndices(square: string): Vector {
 
   if (!_.isString(square)) {
     throw new Error("The square must be a string.");
   }
 
   const [ file, rank ] = square;
-  const result: Coordinates = [ FILES.indexOf(file), RANKS.indexOf(rank) ];
+  const result: Vector = [ FILES.indexOf(file), RANKS.indexOf(rank) ];
 
   if (result.includes(-1)) {
     throw new Error(`The square ${ square } is not valid.`);
@@ -40,7 +40,7 @@ export function squareToIndices(square: string): Coordinates {
   return result;
 }
 
-export function indicesToSquare(indices: Coordinates) {
+export function indicesToSquare(indices: Vector) {
   validateIndices(indices);
   const [ fileIndex, rankIndex ] = indices;
   return `${ FILES[fileIndex] }${ RANKS[rankIndex] }`;
@@ -57,7 +57,7 @@ function reverseIndex(index: number) {
  * Since SVGs are drawn from the top-left and chessboards' coordinates are from the bottom left, we
  * have to reverse the y-coordinate.
  */
-export function reverseYIndex(indices: Coordinates): Coordinates {
+export function reverseYIndex(indices: Vector): Vector {
   validateIndices(indices);
   const [ fileIndex, rankIndex ] = indices;
   return [ fileIndex, reverseIndex(rankIndex) ];
@@ -66,7 +66,7 @@ export function reverseYIndex(indices: Coordinates): Coordinates {
 /**
  * If the orientation is from black's perspective, we have to flip the indices.
  */
-export function orientIndices(indices: Coordinates, orientation: Player): Coordinates {
+export function orientIndices(indices: Vector, orientation: Player): Vector {
   validateIndices(indices);
   const [ fileIndex, rankIndex ] = indices;
 

@@ -6,7 +6,7 @@ export type Article = {
   published: boolean
 };
 
-export type Coordinates = [
+export type Vector = [
   number,
   number
 ];
