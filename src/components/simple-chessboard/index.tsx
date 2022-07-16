@@ -4,11 +4,11 @@ import React from "react";
 import { EMPTY_POSITION, WHITE } from "../../constants";
 import { Highlight } from "../../types";
 import { parsedPositionSize, parsePosition } from "../../utilities/fen";
-import { SQUARE_SIZE } from "./simple-chessboard-constants";
-import { SimpleChessboardCoordinates } from "./simple-chessboard-coordinates";
-import { SimpleChessboardHighlights } from "./simple-chessboard-highlights";
-import { SimpleChessboardPieces } from "./simple-chessboard-pieces";
-import { SimpleChessboardSquares } from "./simple-chessboard-squares";
+import { SQUARE_SIZE } from "./constants";
+import { Coordinates } from "./coordinates";
+import { Highlights } from "./highlights";
+import { Pieces } from "./pieces";
+import { Squares } from "./squares";
 
 interface SimpleChessboardProps {
   fen?: string
@@ -40,21 +40,21 @@ export function SimpleChessboard({ fen, orientation, highlights }: SimpleChessbo
     className="max-w-sm mx-auto"
     viewBox={ `0 0 ${ viewBoxWidth } ${ viewBoxHeight }` }
   >;
-    <SimpleChessboardSquares
+    <Squares
       numberOfRanks={ numberOfRanks }
       numberOfFiles={ numberOfFiles }
     />
-    <SimpleChessboardHighlights
+    <Highlights
       orientation={ orientation }
       highlights={ highlights }
       numberOfRanks={ numberOfRanks }
     />
-    <SimpleChessboardCoordinates
+    <Coordinates
       orientation={ orientation }
       numberOfRanks={ numberOfRanks }
       numberOfFiles={ numberOfFiles }
     />
-    <SimpleChessboardPieces
+    <Pieces
       orientation={ orientation }
       position={ fen }
     />

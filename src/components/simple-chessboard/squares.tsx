@@ -1,7 +1,7 @@
 import _ from "lodash";
 import React from "react";
 
-import { SQUARE_SIZE } from "./simple-chessboard-constants";
+import { SQUARE_SIZE } from "./constants";
 
 type SquareProps = {
   fileIndex: number,
@@ -20,18 +20,15 @@ function Square({ fileIndex, rankIndex }: SquareProps) {
   />;
 }
 
-type SimpleChessboardSquaresType = {
+type SquaresType = {
   numberOfRanks: number,
   numberOfFiles: number
 }
 
-/**
- * Returns the squares for a SimpleChessboard.
- */
-export function SimpleChessboardSquares({
+export function Squares({
   numberOfRanks,
   numberOfFiles
-}: SimpleChessboardSquaresType) {
+}: SquaresType) {
   return <g className="simple-chessboard__squares">
     {
       _.times(numberOfFiles, (fileIndex) => {

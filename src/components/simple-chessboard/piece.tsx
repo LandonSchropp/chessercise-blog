@@ -1,4 +1,4 @@
-import React, { LegacyRef } from "react";
+import React from "react";
 
 import {
   BLACK_BISHOP,
@@ -28,7 +28,7 @@ import WHITE_QUEEN_IMAGE from "../../images/pieces/white-queen.svg";
 import WHITE_ROOK_IMAGE from "../../images/pieces/white-rook.svg";
 import { Player, PlayerPiece, Vector } from "../../types";
 import { orientIndices } from "../../utilities/squares";
-import { SQUARE_SIZE } from "./simple-chessboard-constants";
+import { SQUARE_SIZE } from "./constants";
 
 // A mapping of the internal pieces to their corresponding images..
 export const PIECE_IMAGES = {
@@ -47,24 +47,23 @@ export const PIECE_IMAGES = {
 };
 
 function convertCoordinateToSVG(coordinates: Vector, orientation: Player) {
-  // const reversedCoordinates = reverseYIndex(coordinates);
   const orientedCoordinates = orientIndices(coordinates, orientation);
   return [ orientedCoordinates[0] * SQUARE_SIZE, orientedCoordinates[1] * SQUARE_SIZE ];
 }
 
-type SimpleChessboardPieceProps = {
+type PieceProps = {
   rankIndex: number,
   fileIndex: number,
   piece: PlayerPiece | null,
   orientation: Player
 }
 
-export function SimpleChessboardPiece({
+export function Piece({
   rankIndex,
   fileIndex,
   piece,
   orientation
-}: SimpleChessboardPieceProps) {
+}: PieceProps) {
 
   if (piece === null) {
     return null;

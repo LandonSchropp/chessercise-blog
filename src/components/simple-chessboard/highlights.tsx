@@ -1,16 +1,11 @@
 import React from "react";
 
-import { Highlight, Player, Square, Vector } from "../../types";
-import {
-  orientIndices,
-  reverseYIndex,
-  squareColor,
-  squareToIndices
-} from "../../utilities/squares";
-import { SQUARE_SIZE } from "./simple-chessboard-constants";
+import { Highlight as HighlightType, Player, Square, Vector } from "../../types";
+import { orientIndices, squareColor, squareToIndices } from "../../utilities/squares";
+import { SQUARE_SIZE } from "./constants";
 
-type SimpleChessboardHighlightProps = {
-  highlight: Highlight,
+type HighlightProps = {
+  highlight: HighlightType,
   orientation: Player,
   numberOfRanks: number
 }
@@ -24,11 +19,11 @@ export function squareToSVGCoordinates(
   return [ fileIndex * SQUARE_SIZE, (numberOfRanks - rankIndex - 1) * SQUARE_SIZE ] as Vector;
 }
 
-function SimpleChessboardHighlight({
+function Highlight({
   highlight,
   orientation,
   numberOfRanks
-}: SimpleChessboardHighlightProps) {
+}: HighlightProps) {
   const [ x, y ] = squareToSVGCoordinates(highlight.square, orientation, numberOfRanks);
 
   const styles = {
@@ -59,24 +54,21 @@ function SimpleChessboardHighlight({
   />;
 }
 
-type SimpleChessboardHighlightsProps = {
-  highlights: Highlight[],
+type HighlightsProps = {
+  highlights: HighlightType[],
   orientation: Player,
   numberOfRanks: number
 }
 
-/**
- * Returns the squares for a SimpleChessboard.
- */
-export function SimpleChessboardHighlights({
+export function Highlights({
   highlights,
   orientation,
   numberOfRanks
-}: SimpleChessboardHighlightsProps) {
+}: HighlightsProps) {
   return <g className="simple-chessboard__highlights">
     {
       highlights.map(highlight => {
-        return <SimpleChessboardHighlight
+        return <Highlight
           key={ `${ highlight.color }-${ highlight.square }` }
           highlight={ highlight }
           orientation={ orientation }

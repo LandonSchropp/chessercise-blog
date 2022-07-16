@@ -3,7 +3,7 @@ import React from "react";
 
 import { BOARD_SIZE, DARK_SQUARE, FILES, LIGHT_SQUARE, RANKS, WHITE } from "../../constants";
 import { Player } from "../../types";
-import { SQUARE_SIZE } from "./simple-chessboard-constants";
+import { SQUARE_SIZE } from "./constants";
 
 type Position = "bottom" | "left";
 
@@ -60,59 +60,42 @@ function Coordinate({
 type CoordinatesProps = {
   orientation: Player,
   numberOfFiles: number,
-  numberOfRanks: number,
-  position: Position
-}
+  numberOfRanks: number
+};
 
-function Coordinates({
-  position,
+export function Coordinates({
   orientation,
   numberOfFiles,
   numberOfRanks
-} : CoordinatesProps) {
-  const isRank = position === "left";
+}: CoordinatesProps) {
+  if (numberOfRanks !== BOARD_SIZE || numberOfFiles !== BOARD_SIZE) {
+    return null;
+  }
 
-  return <>
+  return <g>
     {
-      // HACK: There's a bug in TypeScript that prevents us from returning the array directly.
-      // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/20356#issuecomment-435708501
-      _.times(isRank ? numberOfRanks : numberOfFiles, (index: number) => {
+      _.times(numberOfRanks, (index: number) => {
         return <Coordinate
-          key={ `${ position }-${ index }` }
+          key={ `left-${ index }` }
           index={ index }
-          position={ position }
+          position="left"
           orientation={ orientation }
           numberOfRanks={ numberOfRanks }
           numberOfFiles={ numberOfFiles }
         />;
       })
     }
-  </>;
-}
-
-type SimpleChessboardCoordinatesProps = {
-  orientation: "black" | "white",
-  numberOfFiles: number,
-  numberOfRanks: number
-};
-
-export function SimpleChessboardCoordinates({
-  orientation,
-  numberOfFiles,
-  numberOfRanks
-}: SimpleChessboardCoordinatesProps) {
-  if (numberOfRanks !== BOARD_SIZE || numberOfFiles !== BOARD_SIZE) {
-    return null;
-  }
-
-  const coordinatesProps = {
-    orientation,
-    numberOfFiles,
-    numberOfRanks
-  };
-
-  return <g>
-    <Coordinates position="left" { ...coordinatesProps } />
-    <Coordinates position="bottom" { ...coordinatesProps } />
+    {
+      _.times(numberOfRanks, (index: number) => {
+        return <Coordinate
+          key={ `bottom-${ index }` }
+          index={ index }
+          position="bottom"
+          orientation={ orientation }
+          numberOfRanks={ numberOfRanks }
+          numberOfFiles={ numberOfFiles }
+        />;
+      })
+    }
   </g>;
 }

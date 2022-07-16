@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { ArticleSummary } from "../components/article-summary";
 import { Layout } from "../components/layout";
-import { SimpleChessboard } from "../components/simple-chessboard/simple-chessboard";
+import { SimpleChessboard } from "../components/simple-chessboard";
 
 const ARTICLE = {
   title: "Awesome Git Aliases",
