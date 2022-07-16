@@ -1,18 +1,10 @@
 import _ from "lodash";
 
-import { BOARD_SIZE, DARK_SQUARE, FILES, LIGHT_SQUARE, PLAYERS, RANKS, WHITE } from "../constants";
+import { BOARD_SIZE, DARK_SQUARE, FILES, LIGHT_SQUARE, RANKS, WHITE } from "../constants";
 import { File, Player, Rank, Square, SquareColor, Vector } from "../types";
 
 function validateIndices(indices: Vector) {
-  if (!_.isArray(indices)) {
-    throw new Error("The indices must be an array.");
-  }
-
   const [ fileIndex, rankIndex ] = indices;
-
-  if (!_.isNumber(fileIndex) || !_.isNumber(rankIndex)) {
-    throw new Error("The board indices must be numbers.");
-  }
 
   if (fileIndex < 0 || fileIndex >= BOARD_SIZE || rankIndex < 0 || rankIndex >= BOARD_SIZE) {
     throw new Error(`The board indices [ ${ fileIndex }, ${ rankIndex } ] are out of bounds.`);
@@ -25,27 +17,16 @@ function validateIndices(indices: Vector) {
  * @return Returns an array of coordinates between 0–7 inclusive.
  */
 export function squareToIndices(square: Square): Vector {
-
-  if (!_.isString(square)) {
-    throw new Error("The square must be a string.");
-  }
-
   const file = square[0] as File;
   const rank = square[1] as Rank;
 
-  const result: Vector = [ FILES.indexOf(file), RANKS.indexOf(rank) ];
-
-  if (result.includes(-1)) {
-    throw new Error(`The square ${ square } is not valid.`);
-  }
-
-  return result;
+  return [ FILES.indexOf(file), RANKS.indexOf(rank) ] as Vector;
 }
 
-export function indicesToSquare(indices: Vector) {
+export function indicesToSquare(indices: Vector): Square {
   validateIndices(indices);
   const [ fileIndex, rankIndex ] = indices;
-  return `${ FILES[fileIndex] }${ RANKS[rankIndex] }`;
+  return `${ FILES[fileIndex] }${ RANKS[rankIndex] }` as Square;
 }
 
 /**
@@ -71,10 +52,6 @@ export function reverseYIndex(indices: Vector): Vector {
 export function orientIndices(indices: Vector, orientation: Player): Vector {
   validateIndices(indices);
   const [ fileIndex, rankIndex ] = indices;
-
-  if (!PLAYERS.includes(orientation)) {
-    throw new Error(`The orientation ${ orientation } is not valid.`);
-  }
 
   return orientation === WHITE
     ? [ fileIndex, rankIndex ]
