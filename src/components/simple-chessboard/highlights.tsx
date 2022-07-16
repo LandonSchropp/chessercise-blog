@@ -1,22 +1,14 @@
 import React from "react";
 
-import { Highlight as HighlightType, Player, Square, Vector } from "../../types";
-import { orientIndices, squareColor, squareToIndices } from "../../utilities/squares";
+import { Highlight as HighlightType, Player } from "../../types";
+import { squareColor } from "../../utilities/squares";
 import { SQUARE_SIZE } from "./constants";
+import { squareToSVGCoordinates } from "./svg";
 
 type HighlightProps = {
   highlight: HighlightType,
   orientation: Player,
   numberOfRanks: number
-}
-
-export function squareToSVGCoordinates(
-  square: Square,
-  orientation: Player,
-  numberOfRanks: number
-): Vector {
-  const [ fileIndex, rankIndex ] = orientIndices(squareToIndices(square), orientation);
-  return [ fileIndex * SQUARE_SIZE, (numberOfRanks - rankIndex - 1) * SQUARE_SIZE ] as Vector;
 }
 
 function Highlight({
