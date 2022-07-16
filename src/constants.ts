@@ -1,15 +1,17 @@
 import _ from "lodash";
 
+import { File, Piece, Player, PlayerPiece, Rank, Square, SquareColor } from "./types";
+
 // Board
 export const BOARD_SIZE = 8;
 
 // Ranks and files
-export const FILES = "abcdefgh".split("");
-export const RANKS = "12345678".split("");
+export const FILES = "abcdefgh".split("") as File[];
+export const RANKS = "12345678".split("") as Rank[];
 
 // Squares
 export const SQUARES = _.flatMap(FILES, file => {
-  return _.map(RANKS, rank => `${ file }${ rank }`);
+  return _.map(RANKS, rank => `${ file }${ rank }` as Square);
 });
 
 // Positions
@@ -19,12 +21,7 @@ export const STARTING_POSITION = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w 
 // Players
 export const WHITE = "white";
 export const BLACK = "black";
-export const PLAYERS = [ WHITE, BLACK ];
-
-// SIDES
-export const KINGSIDE = "kingside";
-export const QUEENSIDE = "queenside";
-export const SIDES = [ KINGSIDE, QUEENSIDE ];
+export const PLAYERS: Player[] = [ WHITE, BLACK ];
 
 // Pieces
 export const PAWN = "pawn";
@@ -34,7 +31,7 @@ export const ROOK = "rook";
 export const QUEEN = "queen";
 export const KING = "king";
 
-export const PIECES = [
+export const PIECES: Piece[] = [
   KING,
   QUEEN,
   ROOK,
@@ -43,20 +40,20 @@ export const PIECES = [
   PAWN
 ];
 
-export const BLACK_KING = `${ BLACK }${ _.capitalize(KING) }`;
-export const BLACK_QUEEN = `${ BLACK }${ _.capitalize(QUEEN) }`;
-export const BLACK_ROOK = `${ BLACK }${ _.capitalize(ROOK) }`;
-export const BLACK_BISHOP = `${ BLACK }${ _.capitalize(BISHOP) }`;
-export const BLACK_KNIGHT = `${ BLACK }${ _.capitalize(KNIGHT) }`;
-export const BLACK_PAWN = `${ BLACK }${ _.capitalize(PAWN) }`;
-export const WHITE_KING = `${ WHITE }${ _.capitalize(KING) }`;
-export const WHITE_QUEEN = `${ WHITE }${ _.capitalize(QUEEN) }`;
-export const WHITE_ROOK = `${ WHITE }${ _.capitalize(ROOK) }`;
-export const WHITE_BISHOP = `${ WHITE }${ _.capitalize(BISHOP) }`;
-export const WHITE_KNIGHT = `${ WHITE }${ _.capitalize(KNIGHT) }`;
-export const WHITE_PAWN = `${ WHITE }${ _.capitalize(PAWN) }`;
+export const BLACK_KING = `${ BLACK }${ _.capitalize(KING) }` as PlayerPiece;
+export const BLACK_QUEEN = `${ BLACK }${ _.capitalize(QUEEN) }` as PlayerPiece;
+export const BLACK_ROOK = `${ BLACK }${ _.capitalize(ROOK) }` as PlayerPiece;
+export const BLACK_BISHOP = `${ BLACK }${ _.capitalize(BISHOP) }` as PlayerPiece;
+export const BLACK_KNIGHT = `${ BLACK }${ _.capitalize(KNIGHT) }` as PlayerPiece;
+export const BLACK_PAWN = `${ BLACK }${ _.capitalize(PAWN) }` as PlayerPiece;
+export const WHITE_KING = `${ WHITE }${ _.capitalize(KING) }` as PlayerPiece;
+export const WHITE_QUEEN = `${ WHITE }${ _.capitalize(QUEEN) }` as PlayerPiece;
+export const WHITE_ROOK = `${ WHITE }${ _.capitalize(ROOK) }` as PlayerPiece;
+export const WHITE_BISHOP = `${ WHITE }${ _.capitalize(BISHOP) }` as PlayerPiece;
+export const WHITE_KNIGHT = `${ WHITE }${ _.capitalize(KNIGHT) }` as PlayerPiece;
+export const WHITE_PAWN = `${ WHITE }${ _.capitalize(PAWN) }` as PlayerPiece;
 
-export const PLAYER_PIECES = [
+export const PLAYER_PIECES: PlayerPiece[] = [
   BLACK_KING,
   BLACK_QUEEN,
   BLACK_ROOK,
@@ -72,10 +69,10 @@ export const PLAYER_PIECES = [
 ];
 
 // Square colors
-export const LIGHT_SQUARE = "lightSquare";
-export const DARK_SQUARE = "darkSquare";
+export const LIGHT_SQUARE = "light";
+export const DARK_SQUARE = "dark";
 
-export const SQUARE_COLORS = [ LIGHT_SQUARE, DARK_SQUARE ];
+export const SQUARE_COLORS: SquareColor[] = [ LIGHT_SQUARE, DARK_SQUARE ];
 
 // The mappings of FEN symbols to the internal constants.
 export const FEN_PIECES = {

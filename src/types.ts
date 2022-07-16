@@ -13,6 +13,14 @@ export type Vector = [
 
 export type Player = "white" | "black";
 
+export type Piece =
+  | "king"
+  | "queen"
+  | "rook"
+  | "bishop"
+  | "knight"
+  | "pawn"
+
 export type PlayerPiece =
   | "blackKing"
   | "blackQueen"
@@ -29,6 +37,9 @@ export type PlayerPiece =
 
 export type NullablePlayerPiece = PlayerPiece | null
 
+export type Rank = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h"
+export type File = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8"
+
 export type Square =
   | "a1" | "a2" | "a3" | "a4" | "a5" | "a6" | "a7" | "a8"
   | "b1" | "b2" | "b3" | "b4" | "b5" | "b6" | "b7" | "b8"
@@ -44,3 +55,5 @@ export type Color = "red" | "green" | "yellow" | "blue"
 export type Highlight = { color: Color, square: Square }
 
 export type Arrow = { color: Color, from: Square, to: Square }
+
+export type SquareColor = "light" | "dark"
