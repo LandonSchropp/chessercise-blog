@@ -32,8 +32,8 @@ function Highlight({
       dark: "fill-malibu opacity-80"
     },
     yellow: {
-      light: "fill-saffron opacity-70",
-      dark: "fill-saffron opacity-70"
+      light: "fill-neonCarrot opacity-70",
+      dark: "fill-neonCarrot opacity-70"
     }
   };
 

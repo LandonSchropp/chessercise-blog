@@ -2,8 +2,9 @@ import _ from "lodash";
 import React from "react";
 
 import { EMPTY_POSITION, WHITE } from "../../constants";
-import { Highlight } from "../../types";
+import { Arrow, Highlight } from "../../types";
 import { parsedPositionSize, parsePosition } from "../../utilities/fen";
+import { Arrows } from "./arrows";
 import { SQUARE_SIZE } from "./constants";
 import { Coordinates } from "./coordinates";
 import { Highlights } from "./highlights";
@@ -13,7 +14,8 @@ import { Squares } from "./squares";
 interface SimpleChessboardProps {
   fen?: string
   orientation: "white" | "black",
-  highlights: Highlight[]
+  highlights: Highlight[],
+  arrows: Arrow[]
 }
 
 /**
@@ -22,8 +24,14 @@ interface SimpleChessboardProps {
  * animates the change.
  * @param params.orientation Determines the direction the board should be oriented towards.
  * @param params.highlights An array of squares to highlight.
+ * @param params.arrows An array of arrows to render.
  */
-export function SimpleChessboard({ fen, orientation, highlights }: SimpleChessboardProps) {
+export function SimpleChessboard({
+  fen,
+  orientation,
+  highlights,
+  arrows
+}: SimpleChessboardProps) {
 
   // Ensure the position is always populated.
   fen = _.isNil(fen) ? EMPTY_POSITION : fen;
@@ -58,11 +66,17 @@ export function SimpleChessboard({ fen, orientation, highlights }: SimpleChessbo
       orientation={ orientation }
       position={ fen }
     />
+    <Arrows
+      orientation={ orientation }
+      arrows={ arrows }
+      numberOfRanks={ numberOfRanks }
+    />
   </svg>;
 }
 
 SimpleChessboard.defaultProps = {
   position: null,
   orientation: WHITE,
-  highlights: []
+  highlights: [],
+  arrows: []
 };

@@ -45,6 +45,14 @@ export default function IndexPage() {
             { color: "red", square: "g5" }
           ]
         }
+        arrows={
+          [
+            { color: "blue", from: "b2", to: "b4" },
+            { color: "green", from: "b5", to: "e7" },
+            { color: "yellow", from: "f2", to: "g4" },
+            { color: "red", from: "f5", to: "h8" }
+          ]
+        }
       />
       <ArticleSummary article={ ARTICLE } index={ 0 } numberOfArticles={ 5 } />
       <ArticleSummary article={ ARTICLE } index={ 1 } numberOfArticles={ 5 } />
