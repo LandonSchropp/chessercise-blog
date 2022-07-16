@@ -2,15 +2,18 @@ import _ from "lodash";
 import React from "react";
 
 import { EMPTY_POSITION, WHITE } from "../../constants";
+import { Highlight } from "../../types";
 import { parsedPositionSize, parsePosition } from "../../utilities/fen";
 import { SQUARE_SIZE } from "./simple-chessboard-constants";
 import { SimpleChessboardCoordinates } from "./simple-chessboard-coordinates";
+import { SimpleChessboardHighlights } from "./simple-chessboard-highlights";
 import { SimpleChessboardPieces } from "./simple-chessboard-pieces";
 import { SimpleChessboardSquares } from "./simple-chessboard-squares";
 
 interface SimpleChessboardProps {
   fen?: string
-  orientation: "white" | "black"
+  orientation: "white" | "black",
+  highlights: Highlight[]
 }
 
 /**
@@ -18,8 +21,9 @@ interface SimpleChessboardProps {
  * @param params.fen The FEN to render. If the FEN changes, then the chessboard automatically
  * animates the change.
  * @param params.orientation Determines the direction the board should be oriented towards.
+ * @param params.highlights An array of squares to highlight.
  */
-export function SimpleChessboard({ fen, orientation }: SimpleChessboardProps) {
+export function SimpleChessboard({ fen, orientation, highlights }: SimpleChessboardProps) {
 
   // Ensure the position is always populated.
   fen = _.isNil(fen) ? EMPTY_POSITION : fen;
@@ -40,6 +44,11 @@ export function SimpleChessboard({ fen, orientation }: SimpleChessboardProps) {
       numberOfRanks={ numberOfRanks }
       numberOfFiles={ numberOfFiles }
     />
+    <SimpleChessboardHighlights
+      orientation={ orientation }
+      highlights={ highlights }
+      numberOfRanks={ numberOfRanks }
+    />
     <SimpleChessboardCoordinates
       orientation={ orientation }
       numberOfRanks={ numberOfRanks }
@@ -54,5 +63,6 @@ export function SimpleChessboard({ fen, orientation }: SimpleChessboardProps) {
 
 SimpleChessboard.defaultProps = {
   position: null,
-  orientation: WHITE
+  orientation: WHITE,
+  highlights: []
 };

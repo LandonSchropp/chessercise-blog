@@ -32,7 +32,19 @@ export default function IndexPage() {
     <Header />
     <section className="my-8">
       <SimpleChessboard
-        fen="2p/2kp/1Q/P"
+        fen="2p5/2kp/1Q/P/8/8/8/8"
+        highlights={
+          [
+            { color: "blue", square: "b2" },
+            { color: "blue", square: "c2" },
+            { color: "green", square: "b5" },
+            { color: "green", square: "c5" },
+            { color: "yellow", square: "f2" },
+            { color: "yellow", square: "g2" },
+            { color: "red", square: "f5" },
+            { color: "red", square: "g5" }
+          ]
+        }
       />
       <ArticleSummary article={ ARTICLE } index={ 0 } numberOfArticles={ 5 } />
       <ArticleSummary article={ ARTICLE } index={ 1 } numberOfArticles={ 5 } />

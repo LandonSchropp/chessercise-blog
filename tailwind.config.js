@@ -22,6 +22,7 @@ module.exports = {
         mediumPurple: "#836fdd",
         amethyst: "#955fc2",
         fuzzyWuzzyBrown: "#c35151",
+        strawberryWine: "#cd6a6a",
         neonCarrot: "#f99d3f",
         saffron: "#f4ce2c",
         aquaForest: "#56af7b",
