@@ -4126,6 +4126,10 @@ cheerio@^0.22.0:
     lodash.reject "^4.4.0"
     lodash.some "^4.4.0"
 
+"chess.js@https://github.com/jhlywa/chess.js#dev":
+  version "1.0.0-alpha.0"
+  resolved "https://github.com/jhlywa/chess.js#613b391901666352b7d7097e3d780e89827f2db1"
+
 chokidar@^3.5.2, chokidar@^3.5.3:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.3.tgz#1cf37c8707b932bd1af1ae22c0432e2acd1903bd"

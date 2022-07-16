@@ -1,20 +1,15 @@
+import { Chess, validateFen as validateFenChessJS } from "chess.js/src/chess";
 import _ from "lodash";
 
-import { FEN_PIECES } from "../constants";
-import { NullablePlayerPiece, PlayerPiece, Vector } from "../types";
+import { BLACK, BOARD_SIZE, EMPTY_POSITION, FEN_PIECES, KINGSIDE, PLAYERS, QUEENSIDE, SIDES, WHITE } from "../constants";
+import { NullablePlayerPiece, Player, PlayerPiece, Side, Vector } from "../types";
 
 const FEN_POSITION_REGEX = /^[pnbrqk\d]+(\/[pnbrqk\d]+)*$/i;
 
-/**
- * Splits the fen into an array of parts.
- */
 function splitFEN(fen: string) {
   return fen.trim().split(/\s+/);
 }
 
-/**
- * Returns the position component of a FEN.
- */
 function fenPosition(fen: string) {
   return splitFEN(fen)[0];
 }
@@ -61,4 +56,160 @@ export function parsePosition(fen: string): NullablePlayerPiece[][] {
   return parsedPosition.map(row => {
     return [ ...row, ...new Array(numberOfFiles - row.length).fill(null) ];
   });
+}
+
+/**
+ * Determines how many spaces have been occupied in a line of a FEN placement.
+ */
+function placementLineLength(line: string) {
+  const splitLine = line.split("");
+  return _.sumBy(splitLine, character => /\d/.test(character) ? parseInt(character, 10) : 1);
+}
+
+/**
+ * Ensures the FEN line adds up to 8.
+ */
+function sanitizeLine(line: string) {
+
+  // Remove any numbers at the end of the line
+  line = line.replace(/\d+$/, "");
+
+  // Add the line length to the end of the line if necessary.
+  const lineLength = placementLineLength(line);
+
+  return lineLength >= BOARD_SIZE
+    ? line
+    : `${ line }${ BOARD_SIZE - lineLength }`;
+}
+
+/**
+ * Sanitizes the placement portion of the FEN.
+ */
+function sanitizePosition(position: string) {
+
+  return _.flow(
+
+    // Split out the lines.
+    (value) => value.split("/"),
+
+    // Make sure there are at least 8 lines.
+    (value) => [ ...value, ..._.times(BOARD_SIZE - value.length, () => "") ],
+
+    // Remove extra lines.
+    (value) => value.slice(0, BOARD_SIZE),
+
+    // Sanitize each line.
+    value => value.map(sanitizeLine),
+
+    // Put the lines back together.
+    value => value.join("/")
+  )(position);
+}
+
+/**
+ * Given a FEN, this function "completes" the fen with a set of sane defaults.
+ */
+export function sanitizeFEN(fen: string) {
+  const fenParts = splitFEN(fen);
+  const placement = sanitizePosition(fenParts[0]);
+
+  const sanitizedFEN = [
+    placement,
+    ...fenParts.slice(1, fenParts.length),
+    ...EMPTY_POSITION.split(/\s+/).slice(fenParts.length, EMPTY_POSITION.length)
+  ].join(" ");
+
+  return new Chess(sanitizedFEN).fen();
+}
+
+/**
+ * Returns true if two fen strings are equivalent.
+ */
+export function fenPositionsEqual(fen1: string, fen2: string) {
+  return sanitizeFEN(fen1).split(" ")[0] === sanitizeFEN(fen2).split(" ")[0];
+}
+
+/**
+ * Returns true if the FEN is valid.
+ */
+export function isFenValid(fen: string) {
+  return validateFenChessJS(fen).valid;
+}
+
+/**
+ * Throws an error if the FEN is not valid.
+ */
+function validateFen(fen: string) {
+  if (!isFenValid(fen)) {
+    throw new Error(`The FEN '${ fen }' is not valid.`);
+  }
+}
+
+/**
+ * Returns the starting player from the FEN.
+ */
+export function startingPlayer(fen: string) {
+  const player = splitFEN(fen)[1];
+
+  if (_.isNil(player)) {
+    throw new Error(`The fen '${ fen }' does not contain a starting player.`);
+  }
+
+  return player === "b" ? BLACK : WHITE;
+}
+
+/**
+ * Returns a new FEN string with an altered starting player.
+ */
+export function setFenStartingPlayer(fen: string, player: Player) {
+  validateFen(fen);
+
+  const fenParts = splitFEN(fen);
+  fenParts[1] = player === WHITE ? "w" : "b";
+  return fenParts.join(" ");
+}
+
+const FEN_CASTLE_SYMBOLS = {
+  [WHITE]: {
+    [KINGSIDE]: "K",
+    [QUEENSIDE]: "Q"
+  },
+  [BLACK]: {
+    [KINGSIDE]: "k",
+    [QUEENSIDE]: "q"
+  }
+};
+
+/**
+ * Returns true or false depending on whether the given player can castle on the given side.
+ */
+export function fenCanCastle(fen: string, player: Player, side: Side) {
+  validateFen(fen);
+
+  return splitFEN(fen)[2].includes(FEN_CASTLE_SYMBOLS[player][side]);
+}
+
+/**
+ * Returns a new FEN string with altered castling rights.
+ */
+export function setFenCanCastle(fen: string, player: Player, side: Side, canCastle: boolean) {
+  validateFen(fen);
+
+  let castlingRights = PLAYERS.map(playerValue => {
+    return SIDES.map(sideValue => {
+      const value = playerValue === player && sideValue === side
+        ? canCastle
+        : fenCanCastle(fen, playerValue, sideValue);
+
+      return value ? FEN_CASTLE_SYMBOLS[playerValue][sideValue] : "";
+    }).join("");
+  }).join("");
+
+  if (castlingRights === "") {
+    castlingRights = "-";
+  }
+
+  const fenParts = splitFEN(fen);
+  fenParts[2] = castlingRights;
+  return fenParts.join(" ");
 }
