@@ -1,7 +1,7 @@
 import _ from "lodash";
 
 import { BOARD_SIZE, DARK_SQUARE, FILES, LIGHT_SQUARE, PLAYERS, RANKS, WHITE } from "../constants";
-import { Player, Square, Vector } from "../types";
+import { File, Player, Rank, Square, SquareColor, Vector } from "../types";
 
 function validateIndices(indices: Vector) {
   if (!_.isArray(indices)) {
@@ -30,7 +30,9 @@ export function squareToIndices(square: Square): Vector {
     throw new Error("The square must be a string.");
   }
 
-  const [ file, rank ] = square;
+  const file = square[0] as File;
+  const rank = square[1] as Rank;
+
   const result: Vector = [ FILES.indexOf(file), RANKS.indexOf(rank) ];
 
   if (result.includes(-1)) {
@@ -80,6 +82,17 @@ export function orientIndices(indices: Vector, orientation: Player): Vector {
 }
 
 /**
+ * Converts the rank and file coordinates of a chess square to board indices in the SVG coordinate
+ * space.
+ * @param square A string representing the square's coordinates.
+ * @param orientation A string representing the square's coordinates.
+ * @return Returns an array of coordinates between 0–7 inclusive.
+ */
+export function squareToSVGIndices(square: Square, orientation: Player): Vector {
+  return reverseYIndex(orientIndices(squareToIndices(square), orientation));
+}
+
+/**
  * Returns true if the move was a knight move.
  * @from A string representing the from square.
  * @to A string representing the to Square.
@@ -97,6 +110,6 @@ export function isKnightMove(from: Square, to: Square) {
 /**
  * Returns the color of the given square (light or dark).
  */
-export function squareColor(square: Square) {
+export function squareColor(square: Square): SquareColor {
   return _.sum(squareToIndices(square)) % 2 === 0 ? DARK_SQUARE : LIGHT_SQUARE;
 }

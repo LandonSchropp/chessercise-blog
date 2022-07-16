@@ -5,6 +5,7 @@ import {
   SQUARES,
   WHITE
 } from "../../src/constants";
+import { Square } from "../../src/types";
 import {
   indicesToSquare,
   isKnightMove,
@@ -14,25 +15,15 @@ import {
   squareToIndices
 } from "../../src/utilities/squares";
 
-const KNIGHT_MOVES_FROM_D4 = [ "b3", "b5", "c2", "c6", "e2", "e6", "f3", "f5" ];
+const KNIGHT_MOVES_FROM_D4: Square[] = [ "b3", "b5", "c2", "c6", "e2", "e6", "f3", "f5" ];
 
 describe("squareToIndices", () => {
 
-  describe("when the square is not valid", () => {
-
-    it("throws an error", () => {
-      expect(() => squareToIndices("xy")).toThrow();
-    });
-  });
-
-  describe("when the square is valid", () => {
-
-    it("returns the indices corresponding to the square", () => {
-      expect(squareToIndices("a1")).toEqual([ 0, 0 ]);
-      expect(squareToIndices("h8")).toEqual([ 7, 7 ]);
-      expect(squareToIndices("c5")).toEqual([ 2, 4 ]);
-      expect(squareToIndices("f7")).toEqual([ 5, 6 ]);
-    });
+  it("returns the indices corresponding to the square", () => {
+    expect(squareToIndices("a1")).toEqual([ 0, 0 ]);
+    expect(squareToIndices("h8")).toEqual([ 7, 7 ]);
+    expect(squareToIndices("c5")).toEqual([ 2, 4 ]);
+    expect(squareToIndices("f7")).toEqual([ 5, 6 ]);
   });
 });
 
@@ -180,7 +171,7 @@ describe("#isKnightMove", () => {
   describe("when the move is not knight move", () => {
 
     it("returns true", () => {
-      SQUARES.forEach(to => {
+      SQUARES.forEach((to: Square) => {
         if (!KNIGHT_MOVES_FROM_D4.includes(to)) {
           expect(isKnightMove("d4", to)).toEqual(false);
         }
