@@ -1,4 +1,4 @@
-import { addConstant, distance, mod, radiansToDegrees } from "../../src/utilities/math";
+import { addConstant, distance, lengthenSegment, mod, radiansToDegrees } from "../../src/utilities/math";
 
 describe("radiansToDegrees", () => {
 
@@ -87,5 +87,29 @@ describe("distance", () => {
 
   it("returns the sum of the vector and the constant", () => {
     expect(addConstant([ 1, 2 ], 2)).toEqual([ 3, 4 ]);
+  });
+});
+
+describe("lengthenSegment", () => {
+
+  describe("when the amount is 0", () => {
+
+    it("returns the original to", () => {
+      expect(lengthenSegment([ 1, 2 ], [ 4, 6 ], 0)).toEqual([ 4, 6 ]);
+    });
+  });
+
+  describe("when the amount is positive", () => {
+
+    it("lengthens the segment", () => {
+      expect(lengthenSegment([ 1, 2 ], [ 4, 6 ], 5)).toEqual([ 7, 10 ]);
+    });
+  });
+
+  describe("when the amount is negative", () => {
+
+    it("shrinks the segment", () => {
+      expect(lengthenSegment([ 1, 2 ], [ 7, 10 ], -5)).toEqual([ 4, 6 ]);
+    });
   });
 });

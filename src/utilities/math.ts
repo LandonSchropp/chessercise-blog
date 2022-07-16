@@ -27,3 +27,20 @@ export function addConstant(vector: Vector, constant: number): Vector {
 export function mod(dividend: number, divisor: number) {
   return (dividend % divisor + divisor) % divisor;
 }
+
+/**
+ * Shortens the segment between two vectors by the provided length.
+ * @param from The starting point of the segment.
+ * @param to The ending point of the segment.
+ * @param amount The amount to shorten the segment.
+ * @return Returns the coordinates of the new to.
+ */
+export function lengthenSegment(from: Vector, to: Vector, amount: number): Vector {
+  const lineLength = distance(from, to);
+  const t = (lineLength + amount) / lineLength;
+
+  return [
+    from[0] + (to[0] - from[0]) * t,
+    from[1] + (to[1] - from[1]) * t
+  ];
+}
