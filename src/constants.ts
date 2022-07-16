@@ -1,6 +1,6 @@
 import _ from "lodash";
 
-import { File, Piece, Player, PlayerPiece, Rank, Square, SquareColor } from "./types";
+import { File, Piece, Player, PlayerPiece, Rank, Side, Square, SquareColor } from "./types";
 
 // Board
 export const BOARD_SIZE = 8;
@@ -10,7 +10,7 @@ export const FILES = "abcdefgh".split("") as File[];
 export const RANKS = "12345678".split("") as Rank[];
 
 // Squares
-export const SQUARES = _.flatMap(FILES, file => {
+export const SQUARES: Square[] = _.flatMap(FILES, file => {
   return _.map(RANKS, rank => `${ file }${ rank }` as Square);
 });
 
@@ -22,6 +22,11 @@ export const STARTING_POSITION = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w 
 export const WHITE = "white";
 export const BLACK = "black";
 export const PLAYERS: Player[] = [ WHITE, BLACK ];
+
+// Sides
+export const KINGSIDE = "kingside";
+export const QUEENSIDE = "queenside";
+export const SIDES: Side[] = [ KINGSIDE, QUEENSIDE ];
 
 // Pieces
 export const PAWN = "pawn";

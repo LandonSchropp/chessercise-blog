@@ -57,3 +57,5 @@ export type Highlight = { color: Color, square: Square }
 export type Arrow = { color: Color, from: Square, to: Square }
 
 export type SquareColor = "light" | "dark"
+
+export type Side = "kingside" | "queenside"
