@@ -17,9 +17,14 @@ module.exports = {
         current: colors.current,
         transparent: colors.transparent,
 
+        malibu: "#72bbff",
         cornflowerBlue: "#627ff6",
         mediumPurple: "#836fdd",
         amethyst: "#955fc2",
+        fuzzyWuzzyBrown: "#c35151",
+        neonCarrot: "#f99d3f",
+        saffron: "#f4ce2c",
+        aquaForest: "#56af7b",
 
         // TODO: Clean up the newly-added colors
         blackOut: "#1b1c21",
