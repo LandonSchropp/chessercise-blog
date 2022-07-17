@@ -18,7 +18,7 @@ import {
   STARTING_POSITION,
   WHITE
 } from "../constants";
-import { Piece, Player, Square } from "../types";
+import { Arrow, Highlight, Piece, Player, Square } from "../types";
 import {
   fenCanCastle,
   setFenCanCastle,
@@ -26,16 +26,22 @@ import {
   startingPlayer } from "./fen";
 import { indicesToSquare, reverseYIndex } from "./squares";
 
-type Move = {
+interface Position {
+  fen: string,
+  check: boolean,
+  checkmate: boolean,
+  comment: string | null,
+  highlights: Highlight[]
+  arrows: Arrow[]
+}
+
+interface Move extends Position {
   player: Player,
   from: Square,
   to: Square,
-  algebraic: string,
   piece: Piece,
+  algebraic: string,
   capture: boolean,
-  fen: string,
-  check: boolean,
-  checkmate: boolean
 }
 
 type VerbosePiece = {
@@ -78,20 +84,29 @@ function convertPieceToChessJSType(piece: Piece): ChessJSPiece {
   return CHESS_JS_PIECES_INVERTED[piece];
 }
 
+function convertToPosition(chess: Chess): Position {
+  return {
+    fen: chess.fen(),
+    check: chess.inCheck(),
+    checkmate: chess.isCheckmate(),
+    comment: null,
+    highlights: [],
+    arrows: []
+  };
+}
+
 function convertToVerboseMove(
   chess: Chess,
   { color, from, to, san, piece, flags }: ChessJSMove
 ): Move {
   return {
+    ...convertToPosition(chess),
     player: convertChessJSColorToPlayer(color),
     from: from as Square,
     to: to as Square,
     algebraic: san,
     piece: convertChessJSPiece(piece),
-    capture: _.includes(flags, "c") || _.includes(flags, "e"),
-    fen: chess.fen(),
-    check: chess.inCheck(),
-    checkmate: chess.isCheckmate()
+    capture: _.includes(flags, "c") || _.includes(flags, "e")
   };
 }
 
@@ -100,16 +115,15 @@ function convertToVerboseMove(
  * moves, and it adds some additional conveniences to the class.
  */
 export class Chessboard {
-  private _startingPosition: string = STARTING_POSITION;
+  private _startingPosition!: Position;
   private _chess!: Chess;
   private _history!: Move[];
 
   /**
-   * Creates a new chessboard starting from the given starting position.
+   * Creates a new chessboard starting from the given FEN.
    */
   constructor({ startingPosition }: { startingPosition?: string | null } = {}) {
     this.startingPosition = startingPosition || STARTING_POSITION;
-    this.reset();
   }
 
   /**
@@ -126,13 +140,24 @@ export class Chessboard {
       throw new Error("The PGN is invalid!");
     }
 
+    const reversedMoves: [ string, string ][] = [];
+
+    while (chess.history().length > 0) {
+      const comment = chess.getComment();
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const move = chess.undo()!.san;
+      reversedMoves.push([ move, comment ]);
+    }
+
     const chessboard = new Chessboard({ startingPosition: chess.header().FEN });
 
     // eslint-disable-next-line no-extra-parens
-    (chess.history() as string[]).forEach(move => {
+    reversedMoves.reverse().forEach(([ move, comment ]) => {
       if (!chessboard.move(move)) {
         throw new Error("The PGN is invalid!");
       }
+
+      chessboard.setComment(comment);
     });
 
     return chessboard;
@@ -149,15 +174,16 @@ export class Chessboard {
    * Returns the starting position of the chessboard.
    */
   get startingPosition(): string {
-    return this._startingPosition;
+    return this._startingPosition.fen;
   }
 
   /**
    * Sets the starting position of the chessboard.
    */
   set startingPosition(startingPosition: string | null | undefined) {
-    this._startingPosition = startingPosition || STARTING_POSITION;
-    this.reset();
+    this._chess = new Chess(startingPosition || STARTING_POSITION);
+    this._startingPosition = convertToPosition(this._chess);
+    this._history = [];
   }
 
   /**
@@ -308,6 +334,30 @@ export class Chessboard {
   }
 
   /**
+   * Returns the comment for the current position.
+   */
+  get comment(): string | null {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return _.last(this.positions)!.comment;
+  }
+
+  /**
+   * Returns the highlights for the current position.
+   */
+  get highlights(): Highlight[] {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return _.last(this.positions)!.highlights;
+  }
+
+  /**
+   * Returns the arrows for the current position.
+   */
+  get arrows(): Arrow[] {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return _.last(this.positions)!.arrows;
+  }
+
+  /**
    * Returns an array of the legal moves from the current position.
    */
   legalMoves(square: Square): Square[] {
@@ -359,8 +409,8 @@ export class Chessboard {
    * Resets the chessboard to its starting position.
    */
   reset(): void {
-    this._chess = new Chess(this.startingPosition);
-    this._history = [] as Move[];
+    // eslint-disable-next-line no-self-assign
+    this.startingPosition = this.startingPosition;
   }
 
   /**
@@ -410,9 +460,47 @@ export class Chessboard {
   }
 
   /**
+   * Sets the comment for the current position.
+   */
+  setComment(comment: string | null) {
+    const position = _.last(this.positions) as Position;
+    position.comment = comment;
+  }
+
+  /**
+   * Adds an highlight for the current position.
+   */
+  addHighlight(highlight: Highlight) {
+    const position = _.last(this.positions) as Position;
+
+    // TODO: Ensure highlights are unique.
+    position.highlights.push(highlight);
+  }
+
+  /**
+   * Adds an arrow for the current position.
+   */
+  addArrow(arrow: Arrow) {
+    const position = _.last(this.positions) as Position;
+
+    // TODO: Ensure arrows are unique.
+    position.arrows.push(arrow);
+  }
+
+  /**
    * Returns the last move in the history.
    */
   private get lastMove() {
     return _.last(this.history) || null;
+  }
+
+  /**
+   * Returns all of the positions in the chess game, including the starting position.
+   */
+  private get positions(): Position[] {
+    return [
+      this._startingPosition,
+      ...this.history
+    ];
   }
 }

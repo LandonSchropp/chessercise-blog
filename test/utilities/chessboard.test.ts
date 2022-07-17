@@ -185,7 +185,7 @@ describe("Chessboard", () => {
     describe("when the board has one move", () => {
       beforeEach(() => chessboard.move(ITALIAN_MOVES[0]));
 
-      it("includs the move in the history", () => {
+      it("includes the move in the history", () => {
         expect(chessboard.history).toHaveLength(1);
       });
 
@@ -591,6 +591,14 @@ describe("Chessboard", () => {
     });
   });
 
+  describe("#comment", () => {
+    beforeEach(() => chessboard.setComment("Hello!"));
+
+    it("returns the comment", () => {
+      expect(chessboard.comment).toEqual("Hello!");
+    });
+  });
+
   describe("#legalMoves", () => {
 
     describe("when the piece has no legal moves", () => {
@@ -898,6 +906,37 @@ describe("Chessboard", () => {
 
       it("loads the moves", () => {
         expect(chessboard.history.map(move => move.algebraic)).toEqual([ "Qe7#" ]);
+      });
+    });
+
+    describe("when the PGN contains comments", () => {
+
+      describe("when the comment does not contain an escape sequence", () => {
+
+        beforeEach(() => {
+          chessboard = Chessboard.load("1. e4 {Hello $1} *");
+        });
+
+        it("returns the comment unmodified", () => {
+          expect(chessboard.comment).toEqual("Hello!");
+        });
+      });
+
+      describe("when the comment contains an escape sequence", () => {
+
+        it("removes the escape sequence", () => {
+          expect(chessboard.comment).toEqual("Hello!");
+        });
+      });
+
+      describe("when the comment contains highlights", () => {
+
+        it("sets the highlights");
+      });
+
+      describe("when the comment contains arrows", () => {
+
+        it("sets the arrows");
       });
     });
 
