@@ -1,7 +1,17 @@
 import { Chess, validateFen as validateFenChessJS } from "chess.js/src/chess";
 import _ from "lodash";
 
-import { BLACK, BOARD_SIZE, EMPTY_POSITION, FEN_PIECES, KINGSIDE, PLAYERS, QUEENSIDE, SIDES, WHITE } from "../constants";
+import {
+  BLACK,
+  BOARD_SIZE,
+  EMPTY_POSITION,
+  FEN_PIECES,
+  KINGSIDE,
+  PLAYERS,
+  QUEENSIDE,
+  SIDES,
+  WHITE
+} from "../constants";
 import { NullablePlayerPiece, Player, PlayerPiece, Side, Vector } from "../types";
 
 const FEN_POSITION_REGEX = /^[pnbrqk\d]+(\/[pnbrqk\d]+)*$/i;
