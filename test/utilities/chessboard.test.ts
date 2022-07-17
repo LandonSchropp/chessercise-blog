@@ -1,7 +1,11 @@
+import { Chess } from "chess.js/src/chess";
+
 import {
+  BISHOP,
   BLACK,
   EMPTY_POSITION,
   KING,
+  KNIGHT,
   PAWN,
   QUEEN,
   STARTING_POSITION,
@@ -16,11 +20,13 @@ import {
   CAPTURE_POSITION,
   CHECK_POSITION,
   CHECKMATE_POSITION,
+  E4_E5_OPENING,
   ITALIAN_MOVES,
   ITALIAN_POSITION,
+  KINGS_KNIGHT_NC6_OPENING,
+  KINGS_KNIGHT_OPENING,
   KINGS_PAWN_OPENING,
-  PROMOTION_POSITION
-} from "../test-constants";
+  PROMOTION_POSITION } from "../test-constants";
 
 describe("Chessboard", () => {
   let chessboard: Chessboard;
@@ -32,11 +38,24 @@ describe("Chessboard", () => {
     describe("when no parameters are provided", () => {
 
       it("sets the starting position to the default starting position", () => {
-        expect(chessboard.startingPosition).toEqual(STARTING_POSITION);
+        expect(chessboard.startingFEN).toEqual(STARTING_POSITION);
       });
 
-      it("sets the history to an empty array", () => {
-        expect(chessboard.history).toEqual([]);
+      it("sets the moves to an empty array", () => {
+        expect(chessboard.moves).toEqual([]);
+      });
+
+      it("adds the starting position to the positions", () => {
+        expect(chessboard.positions).toEqual([
+          {
+            fen: STARTING_POSITION,
+            check: false,
+            checkmate: false,
+            comment: null,
+            highlights: [],
+            arrows: []
+          }
+        ]);
       });
     });
 
@@ -44,11 +63,24 @@ describe("Chessboard", () => {
       beforeEach(() => chessboard = new Chessboard({}));
 
       it("sets the starting position to the default starting position", () => {
-        expect(chessboard.startingPosition).toEqual(STARTING_POSITION);
+        expect(chessboard.startingFEN).toEqual(STARTING_POSITION);
       });
 
-      it("sets the history to an empty array", () => {
-        expect(chessboard.history).toEqual([]);
+      it("sets the moves to an empty array", () => {
+        expect(chessboard.moves).toEqual([]);
+      });
+
+      it("adds the starting position to the positions", () => {
+        expect(chessboard.positions).toEqual([
+          {
+            fen: STARTING_POSITION,
+            check: false,
+            checkmate: false,
+            comment: null,
+            highlights: [],
+            arrows: []
+          }
+        ]);
       });
     });
 
@@ -56,11 +88,24 @@ describe("Chessboard", () => {
       beforeEach(() => chessboard = new Chessboard({ startingPosition: null }));
 
       it("sets the starting position to the default starting position", () => {
-        expect(chessboard.startingPosition).toEqual(STARTING_POSITION);
+        expect(chessboard.startingFEN).toEqual(STARTING_POSITION);
       });
 
-      it("sets the history to an empty array", () => {
-        expect(chessboard.history).toEqual([]);
+      it("sets the moves to an empty array", () => {
+        expect(chessboard.moves).toEqual([]);
+      });
+
+      it("adds the starting position to the positions", () => {
+        expect(chessboard.positions).toEqual([
+          {
+            fen: STARTING_POSITION,
+            check: false,
+            checkmate: false,
+            comment: null,
+            highlights: [],
+            arrows: []
+          }
+        ]);
       });
     });
 
@@ -68,61 +113,259 @@ describe("Chessboard", () => {
       beforeEach(() => chessboard = new Chessboard({ startingPosition: EMPTY_POSITION }));
 
       it("sets the starting position to the provided starting position", () => {
-        expect(chessboard.startingPosition).toEqual(EMPTY_POSITION);
+        expect(chessboard.startingFEN).toEqual(EMPTY_POSITION);
       });
 
-      it("sets the history to an empty array", () => {
-        expect(chessboard.history).toEqual([]);
+      it("sets the moves to an empty array", () => {
+        expect(chessboard.moves).toEqual([]);
+      });
+
+      it("adds the starting position to the positions", () => {
+        expect(chessboard.positions).toEqual([
+          {
+            fen: EMPTY_POSITION,
+            check: false,
+            checkmate: false,
+            comment: null,
+            highlights: [],
+            arrows: []
+          }
+        ]);
       });
     });
   });
 
   describe("#startingPosition", () => {
-    beforeEach(() => chessboard.startingPosition = ITALIAN_POSITION);
+    beforeEach(() => chessboard = new Chessboard({ startingPosition: ITALIAN_POSITION }));
 
     it("returns the starting position", () => {
-      expect(chessboard.startingPosition).toEqual(ITALIAN_POSITION);
+      expect(chessboard.startingPosition).toEqual({
+        fen: ITALIAN_POSITION,
+        check: false,
+        checkmate: false,
+        comment: null,
+        highlights: [],
+        arrows: []
+      });
     });
   });
 
-  describe("#startingPosition=", () => {
-    describe("when the starting position is not null", () => {
-      beforeEach(() => chessboard.startingPosition = ITALIAN_POSITION);
+  describe("startingFEN", () => {
+    beforeEach(() => chessboard = new Chessboard({ startingPosition: ITALIAN_POSITION }));
 
-      it("sets the starting position", () => {
-        expect(chessboard.startingPosition).toEqual(ITALIAN_POSITION);
+    it("returns the starting position's FEN", () => {
+      expect(chessboard.startingFEN).toEqual(ITALIAN_POSITION);
+    });
+  });
+
+  describe("#moves", () => {
+    describe("when no moves have been made", () => {
+      it("returns an empty array", () => {
+        expect(chessboard.moves).toEqual([]);
       });
     });
 
-    describe("when the starting position is null", () => {
-      beforeEach(() => chessboard.startingPosition = null);
+    describe("when moves have been made", () => {
+      beforeEach(() => ITALIAN_MOVES.forEach(move => chessboard.move(move)));
 
-      it("sets the starting position to the default position", () => {
-        expect(chessboard.startingPosition).toEqual(STARTING_POSITION);
+      it("includes the moves' algebraic notation", () => {
+        expect(chessboard.moves.map(move => move.algebraic)).toEqual(ITALIAN_MOVES);
+      });
+
+      it("includes whether the moves are captures", () => {
+        expect(chessboard.moves.map(move => move.capture)).toEqual([
+          false,
+          false,
+          false,
+          false,
+          false
+        ]);
+      });
+
+      it("includes the moves' from squares", () => {
+        expect(chessboard.moves.map(move => move.from)).toEqual([
+          "e2",
+          "e7",
+          "g1",
+          "b8",
+          "f1"
+        ]);
+      });
+
+      it("includes the moves' to squares", () => {
+        expect(chessboard.moves.map(move => move.to)).toEqual([
+          "e4",
+          "e5",
+          "f3",
+          "c6",
+          "c4"
+        ]);
+      });
+
+      it("includes the moves' pieces", () => {
+        expect(chessboard.moves.map(move => move.piece)).toEqual([
+          PAWN,
+          PAWN,
+          KNIGHT,
+          KNIGHT,
+          BISHOP
+        ]);
+      });
+
+      it("includes the moves' players", () => {
+        expect(chessboard.moves.map(move => move.player)).toEqual([
+          WHITE,
+          BLACK,
+          WHITE,
+          BLACK,
+          WHITE
+        ]);
+      });
+    });
+  });
+
+  describe("#positions", () => {
+    describe("when no moves have been made", () => {
+      it("returns an array containing the starting position", () => {
+        expect(chessboard.positions).toEqual([
+          {
+            "arrows": [],
+            "check": false,
+            "checkmate": false,
+            "comment": null,
+            "fen": STARTING_POSITION,
+            "highlights": []
+          }
+        ]);
       });
     });
 
-    describe("when the chessboard has moves", () => {
-      beforeEach(() => {
-        ITALIAN_MOVES.forEach(move => chessboard.move(move));
-        chessboard.startingPosition = KINGS_PAWN_OPENING;
+    describe("when moves have been made", () => {
+      beforeEach(() => ITALIAN_MOVES.forEach(move => chessboard.move(move)));
+
+      it("returns the positions' FENs", () => {
+        expect(chessboard.positions.map(position => position.fen)).toEqual([
+          STARTING_POSITION,
+          KINGS_PAWN_OPENING,
+          E4_E5_OPENING,
+          KINGS_KNIGHT_OPENING,
+          KINGS_KNIGHT_NC6_OPENING,
+          ITALIAN_POSITION
+        ]);
       });
 
-      it("sets the starting position", () => {
-        expect(chessboard.startingPosition).toEqual(KINGS_PAWN_OPENING);
+      it("returns whether the positions are checks", () => {
+        expect(chessboard.positions.map(position => position.check)).toEqual([
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]);
       });
 
-      it("clears the history", () => {
-        expect(chessboard.history).toEqual([]);
+      it("returns whether the positions are checkmates", () => {
+        expect(chessboard.positions.map(position => position.checkmate)).toEqual([
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]);
+      });
+
+      it("returns the positions' comments", () => {
+        expect(chessboard.positions.map(position => position.comment)).toEqual([
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]);
+      });
+
+      it("returns the positions' highlights", () => {
+        expect(chessboard.positions.map(position => position.highlights)).toEqual([
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ]);
+      });
+
+      it("returns the positions' arrows", () => {
+        expect(chessboard.positions.map(position => position.arrows)).toEqual([
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ]);
+      });
+    });
+  });
+
+  describe("#lastMove", () => {
+    describe("when no moves have been made", () => {
+      it("returns null", () => {
+        expect(chessboard.lastMove).toEqual(null);
       });
     });
 
+    describe("when moves have been made", () => {
+      beforeEach(() => ITALIAN_MOVES.forEach(move => chessboard.move(move)));
+
+      it("returns the last move", () => {
+        expect(chessboard.lastMove).toEqual({
+          "algebraic": "Bc4",
+          "capture": false,
+          "from": "f1",
+          "piece": BISHOP,
+          "player": WHITE,
+          "to": "c4"
+        });
+      });
+    });
+  });
+
+  describe("position", () => {
+    describe("when no moves have been made", () => {
+      it("returns the starting position", () => {
+        expect(chessboard.position).toEqual({
+          "arrows": [],
+          "check": false,
+          "checkmate": false,
+          "comment": null,
+          "fen": STARTING_POSITION,
+          "highlights": []
+        });
+      });
+    });
+
+    describe("when moves have been made", () => {
+      beforeEach(() => ITALIAN_MOVES.forEach(move => chessboard.move(move)));
+
+      it("returns the current position", () => {
+        expect(chessboard.position).toEqual({
+          "arrows": [],
+          "check": false,
+          "checkmate": false,
+          "comment": null,
+          "fen": ITALIAN_POSITION,
+          "highlights": []
+        });
+      });
+    });
   });
 
   describe("#move", () => {
-
     describe("when the move is standard algebraic notation and is valid", () => {
-
       it("returns true", () => {
         ITALIAN_MOVES.forEach(move => {
           expect(chessboard.move(move)).toEqual(true);
@@ -135,8 +378,63 @@ describe("Chessboard", () => {
       });
     });
 
-    describe("when the move is a valid promotion", () => {
-      beforeEach(() => chessboard.startingPosition = BEFORE_PROMOTION_POSITION);
+    describe("when the move is a capture", () => {
+      beforeEach(() => {
+        chessboard = new Chessboard({ startingPosition: BEFORE_CAPTURE_POSITION });
+        chessboard.move("Rxg4");
+      });
+
+      it("sets the move's capture flag to true", () => {
+        expect(chessboard.lastMove?.capture).toEqual(true);
+      });
+
+      it("sets the algebraic notation correctly", () => {
+        expect(chessboard.lastMove?.algebraic).toEqual("Rxg4");
+      });
+    });
+
+    describe("when the move is a check", () => {
+      beforeEach(() => {
+        chessboard = new Chessboard({ startingPosition: BEFORE_CHECK_POSITION });
+        chessboard.move("Qxe5");
+      });
+
+      it("sets the check flag to true", () => {
+        expect(chessboard.position.check).toEqual(true);
+      });
+
+      it("sets the checkmate flag to false", () => {
+        expect(chessboard.position.checkmate).toEqual(false);
+      });
+
+      it("includes the check simple in the algebraic notation", () => {
+        expect(chessboard.lastMove?.algebraic).toEqual("Qxe5+");
+      });
+    });
+
+    describe("when the move is a checkmate", () => {
+      beforeEach(() => {
+        chessboard = new Chessboard({ startingPosition: BEFORE_CHECKMATE_POSITION });
+        chessboard.move("Qe7");
+      });
+
+      it("sets the check flag to true", () => {
+        expect(chessboard.position.check).toEqual(true);
+      });
+
+      it("sets the checkmate flag to true", () => {
+        expect(chessboard.position.checkmate).toEqual(true);
+      });
+
+      it("includes the checkmate symbol in the algebraic notation", () => {
+        expect(chessboard.lastMove?.algebraic).toEqual("Qe7#");
+      });
+    });
+
+    describe("when the move is a promotion", () => {
+      beforeEach(() => {
+        chessboard = new Chessboard({ startingPosition: BEFORE_PROMOTION_POSITION });
+      });
 
       it("returns true", () => {
         expect(chessboard.move("a8=Q")).toEqual(true);
@@ -169,125 +467,6 @@ describe("Chessboard", () => {
       it("does not make the move on the board", () => {
         chessboard.move("banana");
         expect(chessboard.fen).toEqual(STARTING_POSITION);
-      });
-    });
-  });
-
-  describe("#history", () => {
-
-    describe("when the board has no moves", () => {
-
-      it("returns an empty array", () => {
-        expect(chessboard.history).toEqual([]);
-      });
-    });
-
-    describe("when the board has one move", () => {
-      beforeEach(() => chessboard.move(ITALIAN_MOVES[0]));
-
-      it("includes the move in the history", () => {
-        expect(chessboard.history).toHaveLength(1);
-      });
-
-      it("includes the player", () => {
-        expect(chessboard.history[0].player).toEqual(WHITE);
-      });
-
-      it("includes the from square", () => {
-        expect(chessboard.history[0].from).toEqual("e2");
-      });
-
-      it("includes the to square", () => {
-        expect(chessboard.history[0].to).toEqual("e4");
-      });
-
-      it("includes the algebraic notation of the move", () => {
-        expect(chessboard.history[0].algebraic).toEqual("e4");
-      });
-
-      it("includes the piece", () => {
-        expect(chessboard.history[0].piece).toEqual(PAWN);
-      });
-
-      it("includes whether the move was a capture or not", () => {
-        expect(chessboard.history[0].capture).toEqual(false);
-      });
-
-      it("includes whether the move was a check or not", () => {
-        expect(chessboard.history[0].check).toEqual(false);
-      });
-
-      it("includes whether the move was a checkmate or not", () => {
-        expect(chessboard.history[0].checkmate).toEqual(false);
-      });
-
-      it("includes the FEN after the move", () => {
-        expect(chessboard.history[0].fen).toEqual(KINGS_PAWN_OPENING);
-      });
-
-      describe("when the move is a capture", () => {
-        beforeEach(() => {
-          chessboard = new Chessboard({ startingPosition: BEFORE_CAPTURE_POSITION });
-          chessboard.move("Rxg4");
-        });
-
-        it("returns true for capture", () => {
-          expect(chessboard.history[0].capture).toEqual(true);
-        });
-
-        it("returns the correct algebraic notation", () => {
-          expect(chessboard.history[0].algebraic).toEqual("Rxg4");
-        });
-
-        it("returns the correct FEN", () => {
-          expect(chessboard.history[0].fen).toEqual(CAPTURE_POSITION);
-        });
-      });
-
-      describe("when the move is a check", () => {
-        beforeEach(() => {
-          chessboard = new Chessboard({ startingPosition: BEFORE_CHECK_POSITION });
-          chessboard.move("Qxe5");
-        });
-
-        it("returns true for check", () => {
-          expect(chessboard.history[0].check).toEqual(true);
-        });
-
-        it("returns false for checkmate", () => {
-          expect(chessboard.history[0].checkmate).toEqual(false);
-        });
-
-        it("returns the correct algebraic notation", () => {
-          expect(chessboard.history[0].algebraic).toEqual("Qxe5+");
-        });
-
-        it("returns the correct FEN", () => {
-          expect(chessboard.history[0].fen).toEqual(CHECK_POSITION);
-        });
-      });
-
-      describe("when the move is a checkmate", () => {
-        beforeEach(() => {
-          chessboard = new Chessboard({ startingPosition: BEFORE_CHECKMATE_POSITION });
-          chessboard.move("Qe7");
-        });
-
-        it("returns true for check", () => {
-          expect(chessboard.history[0].check).toEqual(true);
-        });
-
-        it("returns true for checkmate", () => {
-          expect(chessboard.history[0].checkmate).toEqual(true);
-        });
-
-        it("returns the correct algebraic notation", () => {
-          expect(chessboard.history[0].algebraic).toEqual("Qe7#");
-        });
-
-        it("returns the correct FEN", () => {
-          expect(chessboard.history[0].fen).toEqual(CHECKMATE_POSITION);
-        });
       });
     });
   });
@@ -328,18 +507,6 @@ describe("Chessboard", () => {
     });
   });
 
-  describe("#startingPlayer=", () => {
-    beforeEach(() => chessboard.startingPlayer = BLACK);
-
-    it("sets the starting player", () => {
-      expect(chessboard.startingPlayer).toEqual(BLACK);
-    });
-
-    it("updates the FEN", () => {
-      expect(chessboard.fen).toEqual("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1");
-    });
-  });
-
   describe("#isStartingPlayerWhite", () => {
 
     describe("when the starting player is white", () => {
@@ -350,7 +517,7 @@ describe("Chessboard", () => {
     });
 
     describe("when the current player is black", () => {
-      beforeEach(() => chessboard.startingPosition = KINGS_PAWN_OPENING);
+      beforeEach(() => chessboard = new Chessboard({ startingPosition: KINGS_PAWN_OPENING }));
 
       it("returns false", () => {
         expect(chessboard.isStartingPlayerWhite).toEqual(false);
@@ -361,7 +528,7 @@ describe("Chessboard", () => {
   describe("#isStartingPlayerBlack", () => {
 
     describe("when the starting player is black", () => {
-      beforeEach(() => chessboard.startingPosition = KINGS_PAWN_OPENING);
+      beforeEach(() => chessboard = new Chessboard({ startingPosition: KINGS_PAWN_OPENING }));
 
       it("returns true", () => {
         expect(chessboard.isStartingPlayerBlack).toEqual(true);
@@ -376,51 +543,35 @@ describe("Chessboard", () => {
     });
   });
 
-  describe("#whiteCanCastleKingside=", () => {
-    beforeEach(() => chessboard.whiteCanCastleKingside = false);
+  describe("#whiteCanCastleKingside", () => {
+    beforeEach(() => chessboard = new Chessboard({ startingPosition: BEFORE_CHECKMATE_POSITION }));
 
-    it("sets whether white can castle kingside", () => {
+    it("returns whether white can castle kingside", () => {
       expect(chessboard.whiteCanCastleKingside).toEqual(false);
     });
-
-    it("updates the FEN", () => {
-      expect(chessboard.fen).toEqual("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w Qkq - 0 1");
-    });
   });
 
-  describe("#whiteCanCastleQueenside=", () => {
-    beforeEach(() => chessboard.whiteCanCastleQueenside = false);
+  describe("#whiteCanCastleQueenside", () => {
+    beforeEach(() => chessboard = new Chessboard({ startingPosition: BEFORE_CHECKMATE_POSITION }));
 
-    it("sets whether white can castle queenside", () => {
+    it("returns whether white can castle queenside", () => {
       expect(chessboard.whiteCanCastleQueenside).toEqual(false);
     });
-
-    it("updates the FEN", () => {
-      expect(chessboard.fen).toEqual("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w Kkq - 0 1");
-    });
   });
 
-  describe("#blackCanCastleKingside=", () => {
-    beforeEach(() => chessboard.blackCanCastleKingside = false);
+  describe("#blackCanCastleKingside", () => {
+    beforeEach(() => chessboard = new Chessboard({ startingPosition: BEFORE_CHECKMATE_POSITION }));
 
-    it("sets whether black can castle kingside", () => {
+    it("returns whether black can castle kingside", () => {
       expect(chessboard.blackCanCastleKingside).toEqual(false);
     });
-
-    it("updates the FEN", () => {
-      expect(chessboard.fen).toEqual("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQq - 0 1");
-    });
   });
 
-  describe("#blackCanCastleQueenside=", () => {
-    beforeEach(() => chessboard.blackCanCastleQueenside = false);
+  describe("#blackCanCastleQueenside", () => {
+    beforeEach(() => chessboard = new Chessboard({ startingPosition: BEFORE_CHECKMATE_POSITION }));
 
-    it("sets whether black can castle queenside", () => {
+    it("returns whether black can castle queenside", () => {
       expect(chessboard.blackCanCastleQueenside).toEqual(false);
-    });
-
-    it("updates the FEN", () => {
-      expect(chessboard.fen).toEqual("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQk - 0 1");
     });
   });
 
@@ -463,7 +614,7 @@ describe("Chessboard", () => {
     });
 
     describe("when the position is a check", () => {
-      beforeEach(() => chessboard.startingPosition = CHECK_POSITION);
+      beforeEach(() => chessboard = new Chessboard({ startingPosition: CHECK_POSITION }));
 
       it("returns true", () => {
         expect(chessboard.isCheck).toEqual(true);
@@ -471,7 +622,7 @@ describe("Chessboard", () => {
     });
 
     describe("when the position is a checkmate", () => {
-      beforeEach(() => chessboard.startingPosition = CHECKMATE_POSITION);
+      beforeEach(() => chessboard = new Chessboard({ startingPosition: CHECKMATE_POSITION }));
 
       it("returns true", () => {
         expect(chessboard.isCheck).toEqual(true);
@@ -489,7 +640,7 @@ describe("Chessboard", () => {
     });
 
     describe("when the position is a check", () => {
-      beforeEach(() => chessboard.startingPosition = CHECK_POSITION);
+      beforeEach(() => chessboard = new Chessboard({ startingPosition: CHECK_POSITION }));
 
       it("returns false", () => {
         expect(chessboard.isCheckmate).toEqual(false);
@@ -497,7 +648,7 @@ describe("Chessboard", () => {
     });
 
     describe("when the position is a checkmate", () => {
-      beforeEach(() => chessboard.startingPosition = CHECKMATE_POSITION);
+      beforeEach(() => chessboard = new Chessboard({ startingPosition: CHECKMATE_POSITION }));
 
       it("returns true", () => {
         expect(chessboard.isCheckmate).toEqual(true);
@@ -568,271 +719,17 @@ describe("Chessboard", () => {
     });
   });
 
-  describe("#pieces", () => {
-
-    describe("when the board is empty", () => {
-      beforeEach(() => chessboard = new Chessboard({ startingPosition: EMPTY_POSITION }));
-
-      it("returns an empty array", () => {
-        expect(chessboard.pieces).toEqual([]);
-      });
-    });
-
-    describe("when the board is not empty", () => {
-      beforeEach(() => chessboard = new Chessboard({ startingPosition: CHECKMATE_POSITION }));
-
-      it("returns an array of all of the pieces on the board", () => {
-        expect(chessboard.pieces).toIncludeSameMembers([
-          { piece: KING, player: BLACK, square: "e8" },
-          { piece: KING, player: WHITE, square: "e6" },
-          { piece: QUEEN, player: WHITE, square: "e7" }
-        ]);
-      });
-    });
-  });
-
-  describe("#comment", () => {
-    beforeEach(() => chessboard.setComment("Hello!"));
-
-    it("returns the comment", () => {
-      expect(chessboard.comment).toEqual("Hello!");
-    });
-  });
-
-  describe("#legalMoves", () => {
-
-    describe("when the piece has no legal moves", () => {
-
-      it("returns an empty array", () => {
-        expect(chessboard.legalMoves("e1")).toEqual([]);
-      });
-    });
-
-    describe("when the piece has legal moves", () => {
-
-      it("returns an arary of the legal moves", () => {
-        expect(chessboard.legalMoves("g1")).toIncludeSameMembers([ "f3", "h3" ]);
-      });
-    });
-  });
-
-  describe("#undo", () => {
-
-    describe("when there are no moves to undo", () => {
-
-      it("throws an error", () => {
-        expect(() => chessboard.undo()).toThrow();
-      });
-    });
-
-    describe("when there are moves to undo", () => {
-      beforeEach(() => {
-        chessboard.move(ITALIAN_MOVES[0]);
-        chessboard.move(ITALIAN_MOVES[1]);
-      });
-
-      it("rolls back the move", () => {
-        chessboard.undo();
-        expect(chessboard.fen).toEqual(KINGS_PAWN_OPENING);
-        chessboard.undo();
-        expect(chessboard.fen).toEqual(STARTING_POSITION);
-      });
-
-      it("pops the last item off the history", () => {
-        chessboard.undo();
-        expect(chessboard.fen).toEqual(KINGS_PAWN_OPENING);
-        chessboard.undo();
-        expect(chessboard.fen).toEqual(STARTING_POSITION);
-      });
-    });
-  });
-
-  describe("#reset", () => {
-
-    describe("when the board is already in the starting position", () => {
-      beforeEach(() => chessboard.reset());
-
-      it("doesn't do anything", () => {
-        expect(chessboard.fen).toEqual(STARTING_POSITION);
-      });
-    });
-
-    describe("when the board is not in the starting position", () => {
-      beforeEach(() => {
-        ITALIAN_MOVES.forEach(move => chessboard.move(move));
-        chessboard.reset();
-      });
-
-      it("resets the board to the starting position", () => {
-        expect(chessboard.fen).toEqual(STARTING_POSITION);
-      });
-    });
-
-    // FIX: This test is reproducing a bug.
-    describe("when the starting position is not the default FEN", () => {
-      beforeEach(() => {
-        chessboard.startingPosition = EMPTY_POSITION;
-        chessboard.reset();
-      });
-
-      it("resets the board to the starting position, not the default FEN", () => {
-        expect(chessboard.fen).toEqual(EMPTY_POSITION);
-      });
-    });
-  });
-
-  describe("#addPieceToStartingPosition", () => {
-
-    describe("when a piece is not on the square", () => {
-      beforeEach(() => {
-        chessboard.startingPosition = EMPTY_POSITION;
-        chessboard.addPieceToStartingPosition("f5", BLACK, QUEEN);
-      });
-
-      it("places a piece on the square", () => {
-        expect(chessboard.pieces).toEqual([ { player: BLACK, piece: QUEEN, square: "f5" } ]);
-      });
-
-      it("updates the starting position", () => {
-        expect(chessboard.startingPosition).toEqual("8/8/8/5q2/8/8/8/8 w KQkq - 0 1");
-      });
-    });
-
-    describe("when a piece is already on the square", () => {
-      beforeEach(() => {
-        chessboard.startingPosition = EMPTY_POSITION;
-        chessboard.addPieceToStartingPosition("f5", BLACK, QUEEN);
-        chessboard.addPieceToStartingPosition("f5", WHITE, QUEEN);
-      });
-
-      it("replaces a piece on the square", () => {
-        expect(chessboard.pieces).toEqual([ { player: WHITE, piece: QUEEN, square: "f5" } ]);
-      });
-
-      it("updates the starting position", () => {
-        expect(chessboard.startingPosition).toEqual("8/8/8/5Q2/8/8/8/8 w KQkq - 0 1");
-      });
-    });
-  });
-
-  describe("#removePieceFromStartingPosition", () => {
-
-    describe("when a piece is not on the square", () => {
-      beforeEach(() => {
-        chessboard.startingPosition = EMPTY_POSITION;
-        chessboard.removePieceFromStartingPosition("f5");
-      });
-
-      it("does nothing", () => {
-        expect(chessboard.pieces).toEqual([]);
-      });
-
-      it("does not update the starting position", () => {
-        expect(chessboard.startingPosition).toEqual(EMPTY_POSITION);
-      });
-    });
-
-    describe("when a piece is already on the square", () => {
-      beforeEach(() => {
-        chessboard.startingPosition = EMPTY_POSITION;
-        chessboard.addPieceToStartingPosition("f5", BLACK, QUEEN);
-        chessboard.removePieceFromStartingPosition("f5");
-      });
-
-      it("removes the piece from the board", () => {
-        expect(chessboard.pieces).toEqual([]);
-      });
-
-      it("updates the starting position", () => {
-        expect(chessboard.startingPosition).toEqual(EMPTY_POSITION);
-      });
-    });
-  });
-
-  describe("#movePieceInStartingPosition", () => {
-    beforeEach(() => {
-      chessboard.startingPosition = EMPTY_POSITION;
-      chessboard.addPieceToStartingPosition("f5", BLACK, QUEEN);
-      chessboard.addPieceToStartingPosition("h4", WHITE, QUEEN);
-    });
-
-    describe("when there is not piece on the from square", () => {
-
-      it("throws an error", () => {
-        expect(() => chessboard.movePieceInStartingPosition("b5", "c4")).toThrow();
-      });
-    });
-
-    describe("when there is no piece on the to square", () => {
-      beforeEach(() => chessboard.movePieceInStartingPosition("f5", "f1"));
-
-      it("removes the piece from the from square", () => {
-        expect(chessboard.pieces).not.toContainEqual({ piece: QUEEN, player: BLACK, square: "f5" });
-      });
-
-      it("places the piece on the to square", () => {
-        expect(chessboard.pieces).toContainEqual({ piece: QUEEN, player: BLACK, square: "f1" });
-      });
-
-      it("still contains the other piece", () => {
-        expect(chessboard.pieces).toContainEqual({ piece: QUEEN, player: WHITE, square: "h4" });
-      });
-
-      it("updates the starting position", () => {
-        expect(chessboard.startingPosition).toEqual("8/8/8/8/7Q/8/8/5q2 w KQkq - 0 1");
-      });
-    });
-
-    describe("when there is a piece on the to square", () => {
-      beforeEach(() => chessboard.movePieceInStartingPosition("f5", "h4"));
-
-      it("removes the piece from the from square", () => {
-        expect(chessboard.pieces).not.toContainEqual({ piece: QUEEN, player: BLACK, square: "f5" });
-      });
-
-      it("places the piece on the to square", () => {
-        expect(chessboard.pieces).toContainEqual({ piece: QUEEN, player: BLACK, square: "h4" });
-      });
-
-      it("removes the other piece", () => {
-        expect(chessboard.pieces).not.toContainEqual({ piece: QUEEN, player: WHITE, square: "h4" });
-      });
-
-      it("updates the starting position", () => {
-        expect(chessboard.startingPosition).toEqual("8/8/8/8/7q/8/8/8 w KQkq - 0 1");
-      });
-    });
-  });
-
-  describe("#hasPiece", () => {
-
-    describe("when the chessboard has the piece", () => {
-
-      it("returns true", () => {
-        expect(chessboard.hasPiece(BLACK, QUEEN)).toEqual(true);
-      });
-    });
-
-    describe("when the chessboard does not have the piece", () => {
-      beforeEach(() => chessboard.startingPosition = EMPTY_POSITION);
-
-      it("returns false", () => {
-        expect(chessboard.hasPiece(BLACK, QUEEN)).toEqual(false);
-      });
-    });
-  });
-
   describe("#load", () => {
 
     describe("when the PGN is empty", () => {
       beforeEach(() => chessboard = Chessboard.load(""));
 
       it("uses the starting position", () => {
-        expect(chessboard.startingPosition).toEqual(STARTING_POSITION);
+        expect(chessboard.startingFEN).toEqual(STARTING_POSITION);
       });
 
-      it("has an empty history", () => {
-        expect(chessboard.history).toEqual([]);
+      it("has no moves", () => {
+        expect(chessboard.moves).toEqual([]);
       });
     });
 
@@ -845,11 +742,11 @@ describe("Chessboard", () => {
       `));
 
       it("uses the starting position", () => {
-        expect(chessboard.startingPosition).toEqual(STARTING_POSITION);
+        expect(chessboard.startingFEN).toEqual(STARTING_POSITION);
       });
 
-      it("has an empty history", () => {
-        expect(chessboard.history).toEqual([]);
+      it("has no moves", () => {
+        expect(chessboard.moves).toEqual([]);
       });
     });
 
@@ -859,11 +756,11 @@ describe("Chessboard", () => {
       });
 
       it("uses the starting position", () => {
-        expect(chessboard.startingPosition).toEqual(STARTING_POSITION);
+        expect(chessboard.startingFEN).toEqual(STARTING_POSITION);
       });
 
-      it("has an empty history", () => {
-        expect(chessboard.history).toEqual([]);
+      it("has no moves", () => {
+        expect(chessboard.moves).toEqual([]);
       });
     });
 
@@ -873,11 +770,11 @@ describe("Chessboard", () => {
       });
 
       it("uses the starting position", () => {
-        expect(chessboard.startingPosition).toEqual(STARTING_POSITION);
+        expect(chessboard.startingFEN).toEqual(STARTING_POSITION);
       });
 
       it("loads the moves", () => {
-        expect(chessboard.history.map(move => move.algebraic)).toEqual(ITALIAN_MOVES);
+        expect(chessboard.moves.map(move => move.algebraic)).toEqual(ITALIAN_MOVES);
       });
     });
 
@@ -887,11 +784,11 @@ describe("Chessboard", () => {
       });
 
       it("uses the custom position", () => {
-        expect(chessboard.startingPosition).toEqual(BEFORE_CHECKMATE_POSITION);
+        expect(chessboard.startingFEN).toEqual(BEFORE_CHECKMATE_POSITION);
       });
 
-      it("has an empty history", () => {
-        expect(chessboard.history).toEqual([]);
+      it("has no moves", () => {
+        expect(chessboard.moves).toEqual([]);
       });
     });
 
@@ -901,42 +798,102 @@ describe("Chessboard", () => {
       });
 
       it("uses the custom position", () => {
-        expect(chessboard.startingPosition).toEqual(BEFORE_CHECKMATE_POSITION);
+        expect(chessboard.startingFEN).toEqual(BEFORE_CHECKMATE_POSITION);
       });
 
       it("loads the moves", () => {
-        expect(chessboard.history.map(move => move.algebraic)).toEqual([ "Qe7#" ]);
+        expect(chessboard.moves.map(move => move.algebraic)).toEqual([ "Qe7#" ]);
       });
     });
 
     describe("when the PGN contains comments", () => {
 
-      describe("when the comment does not contain an escape sequence", () => {
+      describe("when the comment has no distinguishing factors", () => {
+        beforeEach(() => chessboard = Chessboard.load("1. e4 {Hello!} *"));
 
+        it("returns the comment", () => {
+          expect(chessboard.comment).toEqual("Hello!");
+        });
+      });
+
+      describe("when the comment has leading and trailing whitespace", () => {
+        beforeEach(() => chessboard = Chessboard.load("1. e4 {  Hello!  } *"));
+
+        it("returns the comment", () => {
+          expect(chessboard.comment).toEqual("Hello!");
+        });
+      });
+
+      describe("when the comment contains special characteers", () => {
+        beforeEach(() => chessboard = Chessboard.load("1. e4 {Hello! 👋} *"));
+
+        it("returns the comment", () => {
+          expect(chessboard.comment).toEqual("Hello! 👋");
+        });
+      });
+
+      describe("when the comment contains tag", () => {
+        beforeEach(() => chessboard = Chessboard.load("1. e4 {[%clk 0:15:09.9] Hey buddy}"));
+
+        it("removes the escape sequence from the comment", () => {
+          expect(chessboard.comment).toEqual("Hey buddy");
+        });
+      });
+
+      describe("when the comment contains multiple tags", () => {
+        beforeEach(() => chessboard = Chessboard.load("1. e4 {[%clk 0:15:09.9][%hey] Hey buddy}"));
+
+        it("removes the escape sequence from the comment", () => {
+          expect(chessboard.comment).toEqual("Hey buddy");
+        });
+      });
+
+      describe("when the comment contains Chess.com highlights", () => {
         beforeEach(() => {
-          chessboard = Chessboard.load("1. e4 {Hello $1} *");
+          const pgn = "1. e4 {[%c_highlight "
+            + "a1;keyPressed;none;opacity;0.8;square;a1;persistent;false,"
+            + "b2;keyPressed;alt;opacity;0.8;square;b2;persistent;false,"
+            + "c3;keyPressed;ctrl;opacity;0.8;square;c3;persistent;false,"
+            + "d4;keyPressed;shift;opacity;0.8;square;d4;persistent;false"
+            + "] Hey buddy}";
+
+          chessboard = Chessboard.load(pgn);
         });
 
-        it("returns the comment unmodified", () => {
-          expect(chessboard.comment).toEqual("Hello!");
+        it("removes the escape sequence from the comment", () => {
+          expect(chessboard.comment).toEqual("Hey buddy");
         });
-      });
 
-      describe("when the comment contains an escape sequence", () => {
-
-        it("removes the escape sequence", () => {
-          expect(chessboard.comment).toEqual("Hello!");
+        it.only("sets the highlights", () => {
+          expect(chessboard.highlights).toEqual([
+            { color: "red", square: "a1" },
+            { color: "blue", square: "b2" },
+            { color: "yellow", square: "c3" },
+            { color: "green", square: "d4" }
+          ]);
         });
-      });
-
-      describe("when the comment contains highlights", () => {
-
-        it("sets the highlights");
       });
 
       describe("when the comment contains arrows", () => {
+        beforeEach(() => {
+          const pgn = "1. e4 {[%c_arrow"
+            + "a1a2;keyPressed;none;from;a1;opacity;0.8;to;a2;persistent;false,"
+            + "a1b1;keyPressed;ctrl;from;a1;opacity;0.8;to;b1;persistent;false,"
+            + "a1b2;keyPressed;alt;from;a1;opacity;0.8;to;b2;persistent;false,"
+            + "a1b3;keyPressed;shift;from;a1;opacity;0.8;to;b3;persistent;false"
+            + "] Hey buddy}";
 
-        it("sets the arrows");
+          chessboard = Chessboard.load(pgn);
+        });
+
+        it("sets the arrows", () => {
+          expect(chessboard.highlights).toEqual([
+            { color: "yellow", from: "a1", to: "a2" },
+            { color: "blue", from: "a1", to: "b1" },
+            { color: "red", from: "a1", to: "b2" },
+            { color: "green", from: "a1", to: "b3" }
+          ]);
+        });
       });
     });
 

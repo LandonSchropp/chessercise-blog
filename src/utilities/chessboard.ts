@@ -19,12 +19,7 @@ import {
   WHITE
 } from "../constants";
 import { Arrow, Highlight, Piece, Player, Square } from "../types";
-import {
-  fenCanCastle,
-  setFenCanCastle,
-  setFenStartingPlayer,
-  startingPlayer } from "./fen";
-import { indicesToSquare, reverseYIndex } from "./squares";
+import { fenCanCastle, startingPlayer } from "./fen";
 
 interface Position {
   fen: string,
@@ -35,19 +30,13 @@ interface Position {
   arrows: Arrow[]
 }
 
-interface Move extends Position {
+interface Move {
   player: Player,
   from: Square,
   to: Square,
   piece: Piece,
   algebraic: string,
   capture: boolean,
-}
-
-type VerbosePiece = {
-  piece: Piece,
-  player: Player,
-  square: Square
 }
 
 // TODO: Move these constants and helpers into the chess-js.js file.
@@ -65,8 +54,24 @@ const CHESS_JS_COLORS: Record<ChessJSColor, Player> = {
   w: WHITE
 };
 
-const CHESS_JS_PIECES_INVERTED = _.invert(CHESS_JS_PIECES) as Record<Piece, ChessJSPiece>;
-const CHESS_JS_COLORS_INVERTED = _.invert(CHESS_JS_COLORS)as Record<Player, ChessJSColor>;
+const COMMENT_TAG_REGEX = /\[[^\]]+?\]/g;
+const COMMENT_HIGHLIGHT_REGEX = /([a-h][1-8]);keyPressed;(none|ctrl|alt|shift)/g;
+const COMMENT_ARROW_REGEX = /([a-h][1-8])([a-h][1-8]);keyPressed;(none|ctrl|alt|shift)/g;
+
+// These colors match the Chess.com defaults.
+const HIGHLIGHT_COLORS = {
+  "none": "red",
+  "alt": "blue",
+  "ctrl": "yellow",
+  "shift": "green"
+};
+
+const ARROW_COLORS = {
+  "none": "yellow",
+  "alt": "blue",
+  "ctrl": "red",
+  "shift": "green"
+};
 
 function convertChessJSColorToPlayer(chessJsColor: ChessJSColor): Player {
   return CHESS_JS_COLORS[chessJsColor];
@@ -76,15 +81,9 @@ function convertChessJSPiece(chessJsPiece: ChessJSPiece): Piece {
   return CHESS_JS_PIECES[chessJsPiece];
 }
 
-function convertPlayerToChessJSColor(player: Player): ChessJSColor {
-  return CHESS_JS_COLORS_INVERTED[player];
-}
+function convertToPosition(fen: string): Position {
+  const chess = new Chess(fen);
 
-function convertPieceToChessJSType(piece: Piece): ChessJSPiece {
-  return CHESS_JS_PIECES_INVERTED[piece];
-}
-
-function convertToPosition(chess: Chess): Position {
   return {
     fen: chess.fen(),
     check: chess.inCheck(),
@@ -95,12 +94,8 @@ function convertToPosition(chess: Chess): Position {
   };
 }
 
-function convertToVerboseMove(
-  chess: Chess,
-  { color, from, to, san, piece, flags }: ChessJSMove
-): Move {
+function convertToVerboseMove({ color, from, to, san, piece, flags }: ChessJSMove): Move {
   return {
-    ...convertToPosition(chess),
     player: convertChessJSColorToPlayer(color),
     from: from as Square,
     to: to as Square,
@@ -110,101 +105,118 @@ function convertToVerboseMove(
   };
 }
 
+function parseTagHighlights(tag: string | null | undefined) {
+  if (!tag) {
+    return [];
+  }
+
+  const matches = _.compact([ ...tag.matchAll(COMMENT_HIGHLIGHT_REGEX) ])
+    .map(([ , square, key ]) => {
+      return [ square, key ] as [ Square, "none" | "alt" | "ctrl" | "shift" ];
+    });
+
+  return matches.map(([ square, key ]) => {
+    return { square, color: HIGHLIGHT_COLORS[key] } as Highlight;
+  });
+}
+
+function parseTagArrows(tag: string | null | undefined) {
+  if (!tag) {
+    return [];
+  }
+
+  const matches = _.compact([ ...tag.matchAll(COMMENT_ARROW_REGEX) ])
+    .map(([ , from, to, key ]) => {
+      return [ from, to, key ] as [ Square, Square, "none" | "alt" | "ctrl" | "shift" ];
+    });
+
+  return matches.map(([ from, to, key ]) => {
+    return { from, to, color: ARROW_COLORS[key] } as Arrow;
+  });
+}
+
+function parsePGNComment(comment?: string): [string | null, Highlight[], Arrow[]] {
+  if (!comment) {
+    return [ null, [], [] ];
+  }
+
+  // Grab all of the tags from the comment.
+  const tags = _.flatten(_.compact([ ...comment.matchAll(COMMENT_TAG_REGEX) ]));
+
+  // Remove the tags from the comment.
+  comment = comment.replace(COMMENT_TAG_REGEX, "").trim();
+
+  // Parse the highlights and arrows.
+  const highlights = _.flatten(tags.map(tag => parseTagHighlights(tag)));
+  const arrows = _.flatten(tags.map(tag => parseTagArrows(tag)));
+
+  return [ comment, highlights, arrows ];
+}
+
 /**
  * This is an adapter for chess.js. It provides a more modern interface, it uses the application's
  * moves, and it adds some additional conveniences to the class.
  */
 export class Chessboard {
-  private _startingPosition!: Position;
-  private _chess!: Chess;
-  private _history!: Move[];
+
+  /**
+   * Contains all of the moves that have been made on the chessboard.
+   */
+  readonly moves!: Move[];
+
+  /**
+   * Contains all of the positions for the chess game, including the starting position.
+   */
+  readonly positions!: Position[];
 
   /**
    * Creates a new chessboard starting from the given FEN.
    */
   constructor({ startingPosition }: { startingPosition?: string | null } = {}) {
-    this.startingPosition = startingPosition || STARTING_POSITION;
-  }
-
-  /**
-   * Loads the chessboard from a PGN.
-   */
-  static load(pgn: string): Chessboard {
-    if (pgn.trim() === "") {
-      return new Chessboard();
-    }
-
-    const chess = new Chess();
-
-    if (!chess.loadPgn(pgn, { sloppy: true })) {
-      throw new Error("The PGN is invalid!");
-    }
-
-    const reversedMoves: [ string, string ][] = [];
-
-    while (chess.history().length > 0) {
-      const comment = chess.getComment();
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const move = chess.undo()!.san;
-      reversedMoves.push([ move, comment ]);
-    }
-
-    const chessboard = new Chessboard({ startingPosition: chess.header().FEN });
-
-    // eslint-disable-next-line no-extra-parens
-    reversedMoves.reverse().forEach(([ move, comment ]) => {
-      if (!chessboard.move(move)) {
-        throw new Error("The PGN is invalid!");
-      }
-
-      chessboard.setComment(comment);
-    });
-
-    return chessboard;
-  }
-
-  /**
-   * Contains a verbose history of all of the moves made in the chessboard.
-   */
-  get history() {
-    return this._history;
+    this.positions = [ convertToPosition(startingPosition || STARTING_POSITION) ];
+    this.moves = [];
   }
 
   /**
    * Returns the starting position of the chessboard.
    */
-  get startingPosition(): string {
-    return this._startingPosition.fen;
+  get startingPosition(): Position {
+    return this.positions[0];
   }
 
   /**
-   * Sets the starting position of the chessboard.
+   * Returns the FEN of the starting position.
    */
-  set startingPosition(startingPosition: string | null | undefined) {
-    this._chess = new Chess(startingPosition || STARTING_POSITION);
-    this._startingPosition = convertToPosition(this._chess);
-    this._history = [];
+  get startingFEN(): string {
+    return this.startingPosition.fen;
+  }
+
+  /**
+   * Returns the last move.
+   */
+  get lastMove() {
+    return _.last(this.moves) || null;
+  }
+
+  /**
+   * Returns the last position.
+   */
+  get position() {
+    return _.last(this.positions) as Position;
   }
 
   /**
    * Returns the FEN of the current position, or the starting position if no moves have been made.
    */
   get fen(): string {
-    return this.lastMove?.fen || this.startingPosition;
+    return this.position.fen;
   }
 
   /**
    * Returns the first player to play from the original FEN.
    */
   get startingPlayer(): Player {
-    return startingPlayer(this.startingPosition);
-  }
-
-  /**
-   * Sets the starting player.
-   */
-  set startingPlayer(player) {
-    this.startingPosition = setFenStartingPlayer(this.startingPosition, player);
+    return startingPlayer(this.startingPosition.fen);
   }
 
   /**
@@ -225,56 +237,28 @@ export class Chessboard {
    * Returns true if white can castle kingside.
    */
   get whiteCanCastleKingside(): boolean {
-    return fenCanCastle(this.startingPosition, WHITE, KINGSIDE);
-  }
-
-  /**
-   * Sets whether white can castle kingside.
-   */
-  set whiteCanCastleKingside(canCastle) {
-    this.startingPosition = setFenCanCastle(this.startingPosition, WHITE, KINGSIDE, canCastle);
+    return fenCanCastle(this.startingPosition.fen, WHITE, KINGSIDE);
   }
 
   /**
    * Returns true if white can castle queenside.
    */
   get whiteCanCastleQueenside(): boolean {
-    return fenCanCastle(this.startingPosition, WHITE, QUEENSIDE);
-  }
-
-  /**
-   * Sets whether white can castle queenside.
-   */
-  set whiteCanCastleQueenside(canCastle) {
-    this.startingPosition = setFenCanCastle(this.startingPosition, WHITE, QUEENSIDE, canCastle);
+    return fenCanCastle(this.startingPosition.fen, WHITE, QUEENSIDE);
   }
 
   /**
    * Returns true if black can castle kingside.
    */
   get blackCanCastleKingside(): boolean {
-    return fenCanCastle(this.startingPosition, BLACK, KINGSIDE);
-  }
-
-  /**
-   * Sets whether black can castle kingside.
-   */
-  set blackCanCastleKingside(canCastle: boolean) {
-    this.startingPosition = setFenCanCastle(this.startingPosition, BLACK, KINGSIDE, canCastle);
+    return fenCanCastle(this.startingPosition.fen, BLACK, KINGSIDE);
   }
 
   /**
    * Returns true if black can castle kingside.
    */
   get blackCanCastleQueenside(): boolean {
-    return fenCanCastle(this.startingPosition, BLACK, QUEENSIDE);
-  }
-
-  /**
-   * Sets whether black can castle queenside.
-   */
-  set blackCanCastleQueenside(canCastle: boolean) {
-    this.startingPosition = setFenCanCastle(this.startingPosition, BLACK, QUEENSIDE, canCastle);
+    return fenCanCastle(this.startingPosition.fen, BLACK, QUEENSIDE);
   }
 
   /**
@@ -288,49 +272,21 @@ export class Chessboard {
    * Returns true if the current position is a check.
    */
   get isCheck(): boolean {
-    return this._chess.isCheck();
+    return this.position.check;
   }
 
   /**
    * Returns true if the current position is a checkmate.
    */
   get isCheckmate(): boolean {
-    return this._chess.isCheckmate();
+    return this.position.checkmate;
   }
 
   /**
    * Returns the player whose turn it is.
    */
   get currentPlayer(): Player {
-    if (!this.lastMove) {
-      return this.startingPlayer;
-    }
-
-    return this.lastMove.player === WHITE ? BLACK : WHITE;
-  }
-
-  /**
-   * Returns a 2D array of all of the pieces on the board.
-  */
-  get pieces(): VerbosePiece[] {
-
-    const result = _.flatMap(this._chess.board(), (rank, rankIndex) => {
-      return _.map(rank, (piece, fileIndex) => {
-
-        if (_.isNil(piece)) {
-          return null;
-        }
-
-        return {
-          piece: convertChessJSPiece(piece.type),
-          player: convertChessJSColorToPlayer(piece.color),
-          square: indicesToSquare(reverseYIndex([ fileIndex, rankIndex ]))
-        };
-      });
-
-    });
-
-    return _.compact(result);
+    return startingPlayer(this.position.fen);
   }
 
   /**
@@ -358,105 +314,33 @@ export class Chessboard {
   }
 
   /**
-   * Returns an array of the legal moves from the current position.
-   */
-  legalMoves(square: Square): Square[] {
-    const moves = this._chess.moves({ verbose: true, square }) as ChessJSMove[];
-    return moves.map((move) => move.to as Square);
-  }
-
-  /**
    * Makes a move on the chessboard.
    */
   move(move: string): boolean {
 
     // Make the move. We have to attempt to make the move, because that's how we determine if it is
     // valid.
-    let result;
+    let moveResult;
+    const chess = new Chess(this.position.fen);
 
     try {
-      result = this._chess.move(move, { sloppy: true });
+      moveResult = chess.move(move, { sloppy: true });
     }
     catch {
       return false;
     }
 
     // If the move was not successful, ignore it.
-    if (!result) {
+    if (!moveResult) {
       return false;
     }
 
     // Update the history
-    this.history.push(convertToVerboseMove(this._chess, result));
+    this.moves.push(convertToVerboseMove(moveResult));
+    this.positions.push(convertToPosition(chess.fen()));
 
     // Indicate the move was successful
     return true;
-  }
-
-  /**
-   * Undoes the last move.
-   */
-  undo(): void {
-    if (this.history.length === 0) {
-      throw new Error("Can't undo because no moves have been made.");
-    }
-
-    this._chess.undo();
-    this.history.pop();
-  }
-
-  /**
-   * Resets the chessboard to its starting position.
-   */
-  reset(): void {
-    // eslint-disable-next-line no-self-assign
-    this.startingPosition = this.startingPosition;
-  }
-
-  /**
-   * Adds a piece to the board's starting position.
-   */
-  addPieceToStartingPosition(square: Square, player: Player, piece: Piece): void {
-    const data = {
-      type: convertPieceToChessJSType(piece),
-      color: convertPlayerToChessJSColor(player)
-    };
-
-    this._chess.put(data, square);
-    this.startingPosition = this._chess.fen();
-  }
-
-  /**
-   * Removes a piece from the board's starting position.
-   */
-  removePieceFromStartingPosition(square: Square): void {
-    this._chess.remove(square);
-    this.startingPosition = this._chess.fen();
-  }
-
-  /**
-   * Moves a piece in the starting position.
-   */
-  movePieceInStartingPosition(from: Square, to: Square): void {
-    const fromPiece = _.find(this.pieces, ({ square }) => square === from);
-
-    if (_.isNil(fromPiece)) {
-      throw new Error(`There is no piece on the square '${ from }'`);
-    }
-
-    this.removePieceFromStartingPosition(from);
-    this.addPieceToStartingPosition(to, fromPiece.player, fromPiece.piece);
-  }
-
-  /**
-   * Returns true if the chessboard has the given piece.
-   */
-  hasPiece(player: Player, piece: Piece) {
-    const result = _.find(this.pieces, ({ piece: includedPiece, player: includedPlayer }) => {
-      return includedPiece === piece && includedPlayer === player;
-    });
-
-    return !_.isNil(result);
   }
 
   /**
@@ -488,19 +372,42 @@ export class Chessboard {
   }
 
   /**
-   * Returns the last move in the history.
+   * Loads the chessboard from a PGN.
    */
-  private get lastMove() {
-    return _.last(this.history) || null;
-  }
+  static load(pgn: string): Chessboard {
+    if (pgn.trim() === "") {
+      return new Chessboard();
+    }
 
-  /**
-   * Returns all of the positions in the chess game, including the starting position.
-   */
-  private get positions(): Position[] {
-    return [
-      this._startingPosition,
-      ...this.history
-    ];
+    const chess = new Chess();
+
+    if (!chess.loadPgn(pgn, { sloppy: true })) {
+      throw new Error("The PGN is invalid!");
+    }
+
+    const reversedHistory: [ move: string, comment: string ][] = [];
+
+    while (chess.history().length > 0) {
+      const comment = chess.getComment();
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const move = chess.undo()!.san;
+      reversedHistory.push([ move, comment ]);
+    }
+
+    const chessboard = new Chessboard({ startingPosition: chess.header().FEN });
+
+    reversedHistory.reverse().forEach(([ move, comment ]) => {
+      if (!chessboard.move(move)) {
+        throw new Error("The PGN is invalid!");
+      }
+
+      const [ parsedComment, highlights, arrows ] = parsePGNComment(comment);
+
+      chessboard.setComment(parsedComment);
+      highlights.forEach(highlight => chessboard.addHighlight(highlight));
+      arrows.forEach(arrow => chessboard.addArrow(arrow));
+    });
+
+    return chessboard;
   }
 }
