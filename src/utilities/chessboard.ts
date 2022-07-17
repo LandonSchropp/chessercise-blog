@@ -113,6 +113,32 @@ export class Chessboard {
   }
 
   /**
+   * Loads the chessboard from a PGN.
+   */
+  static load(pgn: string): Chessboard {
+    if (pgn.trim() === "") {
+      return new Chessboard();
+    }
+
+    const chess = new Chess();
+
+    if (!chess.loadPgn(pgn, { sloppy: true })) {
+      throw new Error("The PGN is invalid!");
+    }
+
+    const chessboard = new Chessboard({ startingPosition: chess.header().FEN });
+
+    // eslint-disable-next-line no-extra-parens
+    (chess.history() as string[]).forEach(move => {
+      if (!chessboard.move(move)) {
+        throw new Error("The PGN is invalid!");
+      }
+    });
+
+    return chessboard;
+  }
+
+  /**
    * Contains a verbose history of all of the moves made in the chessboard.
    */
   get history() {

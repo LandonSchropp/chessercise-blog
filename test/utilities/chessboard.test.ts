@@ -813,4 +813,104 @@ describe("Chessboard", () => {
       });
     });
   });
+
+  describe("#load", () => {
+
+    describe("when the PGN is empty", () => {
+      beforeEach(() => chessboard = Chessboard.load(""));
+
+      it("uses the starting position", () => {
+        expect(chessboard.startingPosition).toEqual(STARTING_POSITION);
+      });
+
+      it("has an empty history", () => {
+        expect(chessboard.history).toEqual([]);
+      });
+    });
+
+    describe("when the PGN only contains headers", () => {
+      beforeEach(() => chessboard = Chessboard.load(`
+        [Event "Example"]
+        [Date "2022.07.16"]
+
+        *
+      `));
+
+      it("uses the starting position", () => {
+        expect(chessboard.startingPosition).toEqual(STARTING_POSITION);
+      });
+
+      it("has an empty history", () => {
+        expect(chessboard.history).toEqual([]);
+      });
+    });
+
+    describe("when the PGN contains no moves or a position", () => {
+      beforeEach(() => {
+        return chessboard = Chessboard.load("*");
+      });
+
+      it("uses the starting position", () => {
+        expect(chessboard.startingPosition).toEqual(STARTING_POSITION);
+      });
+
+      it("has an empty history", () => {
+        expect(chessboard.history).toEqual([]);
+      });
+    });
+
+    describe("when the PGN contains moves without a position", () => {
+      beforeEach(() => {
+        return chessboard = Chessboard.load("1. e4 e5 2. Nf3 Nc6 3. Bc4");
+      });
+
+      it("uses the starting position", () => {
+        expect(chessboard.startingPosition).toEqual(STARTING_POSITION);
+      });
+
+      it("loads the moves", () => {
+        expect(chessboard.history.map(move => move.algebraic)).toEqual(ITALIAN_MOVES);
+      });
+    });
+
+    describe("when the PGN contains no moves with a custom position", () => {
+      beforeEach(() => {
+        return chessboard = Chessboard.load(`[FEN "${ BEFORE_CHECKMATE_POSITION }"]\n\n*`);
+      });
+
+      it("uses the custom position", () => {
+        expect(chessboard.startingPosition).toEqual(BEFORE_CHECKMATE_POSITION);
+      });
+
+      it("has an empty history", () => {
+        expect(chessboard.history).toEqual([]);
+      });
+    });
+
+    describe("when the PGN contains moves with a custom position", () => {
+      beforeEach(() => {
+        return chessboard = Chessboard.load(`[FEN "${ BEFORE_CHECKMATE_POSITION }"]\n\n1. Qe7#`);
+      });
+
+      it("uses the custom position", () => {
+        expect(chessboard.startingPosition).toEqual(BEFORE_CHECKMATE_POSITION);
+      });
+
+      it("loads the moves", () => {
+        expect(chessboard.history.map(move => move.algebraic)).toEqual([ "Qe7#" ]);
+      });
+    });
+
+    describe("when the PGN is not valid", () => {
+      it("throws an error", () => {
+        expect(() => Chessboard.load("banana")).toThrow();
+      });
+    });
+
+    describe("when the PGN contains invalid moves", () => {
+      it("throws an error", () => {
+        expect(() => Chessboard.load("1. e5")).toThrow();
+      });
+    });
+  });
 });
