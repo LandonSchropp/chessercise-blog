@@ -1,3 +1,5 @@
+import "jest-extended/all";
+
 // Monkey patch Jest so that tests written without a function implementation are marked as `todo`.
 const globalIt = global.it as jest.It;
 
