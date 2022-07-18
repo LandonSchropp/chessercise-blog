@@ -1,10 +1,10 @@
 import { MDXRenderer } from "gatsby-plugin-mdx";
 import React from "react";
 
-import { Article } from "../types";
+import { Article as ArticleType } from "../types";
 
 type ArticleProps = {
-  article: Article,
+  article: ArticleType,
   content: string
 }
 

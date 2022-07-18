@@ -118,7 +118,7 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
   // Filter out the unpublished articles and create pages for each.
   result.data.articles.filter(({ published }) => published).forEach(({ slug }) => {
     createPage({
-      path: `articles/${ slug }`,
+      path: `${ slug }`,
       component: path.resolve(`src/templates/article-template.tsx`),
       context: { slug }
     });

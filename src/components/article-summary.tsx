@@ -22,7 +22,7 @@ export function ArticleSummary({ article, index, numberOfArticles }: ArticleProp
         + "hover:border-shadow focus-visible:border-shadow border-l-[color:var(--color)] "
         + "focus:outline-none"
     }
-    to={ `/articles/${ article.slug }` }
+    to={ `/${ article.slug }` }
     style={ { "--color": color } }
   >
     <h3 className="my-0">
