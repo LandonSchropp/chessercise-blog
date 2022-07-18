@@ -54,11 +54,11 @@ export default function IndexPage() {
           ]
         }
       />
-      <ArticleSummary article={ ARTICLE } index={ 0 } numberOfArticles={ 5 } />
-      <ArticleSummary article={ ARTICLE } index={ 1 } numberOfArticles={ 5 } />
-      <ArticleSummary article={ ARTICLE } index={ 2 } numberOfArticles={ 5 } />
-      <ArticleSummary article={ ARTICLE } index={ 3 } numberOfArticles={ 5 } />
-      <ArticleSummary article={ ARTICLE } index={ 4 } numberOfArticles={ 5 } />
+      <ArticleSummary article={ ARTICLE } />
+      <ArticleSummary article={ ARTICLE } />
+      <ArticleSummary article={ ARTICLE } />
+      <ArticleSummary article={ ARTICLE } />
+      <ArticleSummary article={ ARTICLE } />
     </section>
   </Layout>;
 }
