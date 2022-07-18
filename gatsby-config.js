@@ -1,3 +1,5 @@
+const ARTICLES_DATABASE_ID = "1016394a8b7048148b942da2dc2abe55";
+
 module.exports = {
   siteMetadata: {
     title: `Chessercise Blog`,
@@ -18,7 +20,6 @@ module.exports = {
         "icon": "src/images/icon.png"
       }
     },
-    "gatsby-plugin-mdx",
     {
       resolve: "gatsby-source-filesystem",
       options: {
@@ -26,6 +27,15 @@ module.exports = {
         "path": "./src/pages/"
       }
     },
-    `gatsby-plugin-postcss`
+    "gatsby-plugin-mdx",
+    `gatsby-plugin-postcss`,
+    {
+      resolve: "gatsby-source-notion-api",
+      options: {
+        token: process.env.NOTION_API_TOKEN,
+        databaseId: ARTICLES_DATABASE_ID,
+        lowerTitleLevel: true
+      }
+    }
   ]
 };
