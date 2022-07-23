@@ -41,7 +41,7 @@ module.exports = {
       };
     },
     fontFamily: {
-      sans: [ "Open Sans", "sans-serif" ],
+      sans: [ "Roboto", "sans-serif" ],
       serif: [ "Gentium Book Basic", "serif" ],
       mono: [ "Source Code Pro", "monospace" ]
     },
