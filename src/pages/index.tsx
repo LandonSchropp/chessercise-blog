@@ -1,17 +1,20 @@
+import { graphql } from "gatsby";
 import * as React from "react";
 
 import { ArticleSummary } from "../components/article-summary";
 import { Layout } from "../components/layout";
-import { SimpleChessboard } from "../components/simple-chessboard";
+import { Article } from "../types";
 
-const ARTICLE = {
-  title: "Awesome Git Aliases",
-  slug: "awesome-git-aliases",
-  date: new Date("1988-10-05"),
-  description: `Wouldn't it be awesome if Git could do more? What if you could customize it with
-    your own commands, making it do anything you can imagine?`,
-  published: true
-};
+export const query = graphql`
+  query {
+    articles {
+      title
+      slug
+      date
+      description
+    }
+  }
+`;
 
 function Header() {
   return <header className="my-8 text-emperor text-center">
@@ -27,38 +30,23 @@ function Header() {
   </header>;
 }
 
-export default function IndexPage() {
+type IndexPageProps = {
+  data: {
+    articles: Article[]
+  }
+}
+
+export default function IndexPage({ data: { articles } }: IndexPageProps) {
+  // FIX: This is a temporary hack to be able to design the layout since I don't have very many
+  // articles at the moment.
+  articles = new Array(10).fill(articles[0]);
+
   return <Layout>
     <Header />
     <section className="my-8">
-      <SimpleChessboard
-        fen="2p5/2kp/1Q/P/8/8/8/8"
-        highlights={
-          [
-            { color: "blue", square: "b2" },
-            { color: "blue", square: "c2" },
-            { color: "green", square: "b5" },
-            { color: "green", square: "c5" },
-            { color: "yellow", square: "f2" },
-            { color: "yellow", square: "g2" },
-            { color: "red", square: "f5" },
-            { color: "red", square: "g5" }
-          ]
-        }
-        arrows={
-          [
-            { color: "blue", from: "b2", to: "b4" },
-            { color: "green", from: "b5", to: "e7" },
-            { color: "yellow", from: "f2", to: "g4" },
-            { color: "red", from: "f5", to: "h8" }
-          ]
-        }
-      />
-      <ArticleSummary article={ ARTICLE } />
-      <ArticleSummary article={ ARTICLE } />
-      <ArticleSummary article={ ARTICLE } />
-      <ArticleSummary article={ ARTICLE } />
-      <ArticleSummary article={ ARTICLE } />
+      {
+        articles.map(article => <ArticleSummary key={ article.slug } article={ article } />)
+      }
     </section>
   </Layout>;
 }
