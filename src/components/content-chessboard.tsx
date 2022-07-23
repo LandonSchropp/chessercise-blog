@@ -10,6 +10,7 @@ const HIGHLIGHT_REGEX = /\b([RGBY])([a-h][1-8])\b/g;
 const ARROW_REGEX = /\b([RGBY])([a-h][1-8])([a-h][1-8])\b/g;
 const COMMENT_REGEX = /{([^}]+)}/;
 const MAX_WIDTH = 640;
+const MAX_NUMBER_OF_SQUARES_TO_SCALE = 6;
 
 const COLORS: Record<string, Color> = {
   R: "red",
@@ -67,7 +68,6 @@ function parseComment(customFormatting: string) {
   }
 
   const match = customFormatting.match(COMMENT_REGEX);
-  console.log(customFormatting, match);
 
   if (!match) {
     return null;
@@ -105,10 +105,11 @@ export function ContentChessboard({ content }: { content: string }) {
     const arrows = parseArrows(customFormatting);
     const comment = parseComment(customFormatting);
 
-    return <figure
-      className={ "my-4 mx-auto" }
-      style={ { maxWidth: numberOfFiles / BOARD_SIZE * MAX_WIDTH } }
-    >
+    const maxWidth = numberOfFiles > MAX_NUMBER_OF_SQUARES_TO_SCALE
+      ? MAX_WIDTH
+      : numberOfFiles / MAX_NUMBER_OF_SQUARES_TO_SCALE * MAX_WIDTH;
+
+    return <figure className={ "my-4 mx-auto" } style={ { maxWidth } }>
       <SimpleChessboard
         fen={ fen }
         highlights={ highlights }
