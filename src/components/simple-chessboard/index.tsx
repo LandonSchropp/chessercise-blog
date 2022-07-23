@@ -1,9 +1,8 @@
 import _ from "lodash";
 import React from "react";
 
-import { EMPTY_POSITION, WHITE } from "../../constants";
+import { BOARD_SIZE, EMPTY_POSITION, WHITE } from "../../constants";
 import { Arrow, Highlight } from "../../types";
-import { parsedPositionSize, parsePosition } from "../../utilities/fen";
 import { Arrows } from "./arrows";
 import { SQUARE_SIZE } from "./constants";
 import { Coordinates } from "./coordinates";
@@ -15,31 +14,35 @@ interface SimpleChessboardProps {
   fen?: string
   orientation: "white" | "black",
   highlights: Highlight[],
-  arrows: Arrow[]
+  arrows: Arrow[],
+  numberOfFiles: number,
+  numberOfRanks: number
 }
 
 /**
  * A super-simple React chessboard.
+ * @param params
  * @param params.fen The FEN to render. If the FEN changes, then the chessboard automatically
  * animates the change.
  * @param params.orientation Determines the direction the board should be oriented towards.
  * @param params.highlights An array of squares to highlight.
  * @param params.arrows An array of arrows to render.
+ * @param params.numberOfFiles The number of files to include in the board.
+ * @param params.numberOfRanks The number of ranks to include in the board.
  */
 export function SimpleChessboard({
   fen,
   orientation,
   highlights,
-  arrows
+  arrows,
+  numberOfFiles,
+  numberOfRanks
 }: SimpleChessboardProps) {
 
   // Ensure the position is always populated.
   fen = _.isNil(fen) ? EMPTY_POSITION : fen;
-  const parsedPosition = parsePosition(fen);
 
-  // TODO: Determine these properties from the FEN.
-  const [ numberOfRanks, numberOfFiles ] = parsedPositionSize(parsedPosition);
-
+  // Determine the viewBox size.
   const viewBoxWidth = numberOfFiles * SQUARE_SIZE;
   const viewBoxHeight = numberOfRanks * SQUARE_SIZE;
 
@@ -78,5 +81,7 @@ SimpleChessboard.defaultProps = {
   position: null,
   orientation: WHITE,
   highlights: [],
-  arrows: []
+  arrows: [],
+  numberOfFiles: BOARD_SIZE,
+  numberOfRanks: BOARD_SIZE
 };

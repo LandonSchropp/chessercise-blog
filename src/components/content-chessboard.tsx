@@ -4,6 +4,7 @@ import { Arrow, Color, Highlight, Square } from "../types";
 import { isFenValid } from "../utilities/fen";
 import { SimpleChessboard } from "./simple-chessboard";
 
+const BOARD_SIZE_REGEX = /\b([1-8])x([1-8])\b/g;
 const HIGHLIGHT_REGEX = /\b([RGBY])([a-h][1-8])\b/g;
 const ARROW_REGEX = /\b([RGBY])([a-h][1-8])([a-h][1-8])\b/g;
 
@@ -15,6 +16,23 @@ const COLORS: Record<string, Color> = {
 };
 
 type ColorsKey = keyof typeof COLORS;
+
+function parseBoardSize(content?: string) {
+  if (!content) {
+    return [];
+  }
+
+  const match = BOARD_SIZE_REGEX.exec(content);
+
+  if (!match) {
+    return {};
+  }
+
+  return {
+    numberOfFiles: parseInt(match[1], 10),
+    numberOfRanks: parseInt(match[2], 10)
+  };
+}
 
 function parseHighlights(content?: string): Highlight[] {
   if (!content) {
@@ -59,17 +77,19 @@ function parseArrows(content?: string): Arrow[] {
  */
 export function ContentChessboard({ content }: { content: string }) {
   const [ fen, ...remainingLines ] = content.split("\n");
-  const arrowsAndHighlights = remainingLines.join(" ");
+  const customFormatting = remainingLines.join(" ");
 
   if (isFenValid(fen)) {
-    const highlights = parseHighlights(arrowsAndHighlights);
-    const arrows = parseArrows(arrowsAndHighlights);
+    const boardSizeProps = parseBoardSize(customFormatting);
+    const highlights = parseHighlights(customFormatting);
+    const arrows = parseArrows(customFormatting);
 
     return <div className="my-4">
       <SimpleChessboard
         fen={ fen }
         highlights={ highlights }
         arrows={ arrows }
+        { ...boardSizeProps }
       />
     </div>;
   }
