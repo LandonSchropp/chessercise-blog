@@ -8,6 +8,7 @@ import { SimpleChessboard } from "./simple-chessboard";
 const BOARD_SIZE_REGEX = /\b([1-8])x([1-8])\b/;
 const HIGHLIGHT_REGEX = /\b([RGBY])([a-h][1-8])\b/g;
 const ARROW_REGEX = /\b([RGBY])([a-h][1-8])([a-h][1-8])\b/g;
+const COMMENT_REGEX = /{([^}]+)}/;
 const MAX_WIDTH = 640;
 
 const COLORS: Record<string, Color> = {
@@ -59,6 +60,22 @@ function parseArrows(content?: string): Arrow[] {
   }));
 }
 
+function parseComment(customFormatting: string) {
+
+  if (!customFormatting) {
+    return null;
+  }
+
+  const match = customFormatting.match(COMMENT_REGEX);
+  console.log(customFormatting, match);
+
+  if (!match) {
+    return null;
+  }
+
+  return match[1];
+}
+
 /**
  * This is a special wrapper for this blog's chessboard that can take either custom-formatted FENs
  * or PGNs. It's smart enough to tell the difference, as well as to parse the content and put it
@@ -73,8 +90,9 @@ function parseArrows(content?: string): Arrow[] {
  *   * Highlights: Highlights are denoted as `<color><square>`, where the color is one of
  *     `R`, `G`, `B` or `Y`. For example, `Ba7` is a valid highlight.
  *   * Arrows are denoted by `<color><from><to>` in a similar format, such as `Yg1a7`.
- *   * Board size: The board size is denoted by <width>x<height>. The width and height must be
+ *   * Board size: The board size is denoted by `<width>x<height>`. The width and height must be
  *     positive integers between 1 and 8.
+ *   * Comment: A comment can be included with the format `{<comment>}`.
  * * A valid PGN, including comments. (TODO)
  */
 export function ContentChessboard({ content }: { content: string }) {
@@ -83,11 +101,11 @@ export function ContentChessboard({ content }: { content: string }) {
 
   if (isFenValid(fen)) {
     const [ numberOfFiles, numberOfRanks ] = parseBoardSize(customFormatting);
-
     const highlights = parseHighlights(customFormatting);
     const arrows = parseArrows(customFormatting);
+    const comment = parseComment(customFormatting);
 
-    return <div
+    return <figure
       className={ "my-4 mx-auto" }
       style={ { maxWidth: numberOfFiles / BOARD_SIZE * MAX_WIDTH } }
     >
@@ -98,7 +116,14 @@ export function ContentChessboard({ content }: { content: string }) {
         numberOfFiles={ numberOfFiles }
         numberOfRanks={ numberOfRanks }
       />
-    </div>;
+      {
+        comment
+          ? <figcaption className="italic text-center my-1 text-emperor text-sm">
+            { comment }
+          </figcaption>
+          : null
+      }
+    </figure>;
   }
 
   throw new Error("The content of this code block could not be parsed!");
