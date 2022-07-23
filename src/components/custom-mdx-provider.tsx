@@ -16,7 +16,7 @@ function ChessboardCode({ children: content }: { children: JSX.Element }) {
     throw new Error("Code blocks cannot be used for anything except for FENs or PGNs!");
   }
 
-  return <ContentChessboard content={ content } />;
+  return <ContentChessboard className="my-4 mx-auto" content={ content } />;
 }
 
 /**

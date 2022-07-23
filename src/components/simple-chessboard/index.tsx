@@ -16,7 +16,8 @@ interface SimpleChessboardProps {
   highlights: Highlight[],
   arrows: Arrow[],
   numberOfFiles: number,
-  numberOfRanks: number
+  numberOfRanks: number,
+  coordinates: "auto" | "never"
 }
 
 /**
@@ -29,6 +30,7 @@ interface SimpleChessboardProps {
  * @param params.arrows An array of arrows to render.
  * @param params.numberOfFiles The number of files to include in the board.
  * @param params.numberOfRanks The number of ranks to include in the board.
+ * @param params.coordinates Whether or not to include coordinates.
  */
 export function SimpleChessboard({
   fen,
@@ -36,7 +38,8 @@ export function SimpleChessboard({
   highlights,
   arrows,
   numberOfFiles,
-  numberOfRanks
+  numberOfRanks,
+  coordinates
 }: SimpleChessboardProps) {
 
   // Ensure the position is always populated.
@@ -57,11 +60,15 @@ export function SimpleChessboard({
       highlights={ highlights }
       numberOfRanks={ numberOfRanks }
     />
-    <Coordinates
-      orientation={ orientation }
-      numberOfRanks={ numberOfRanks }
-      numberOfFiles={ numberOfFiles }
-    />
+    {
+      coordinates === "never"
+        ? null
+        : <Coordinates
+          orientation={ orientation }
+          numberOfRanks={ numberOfRanks }
+          numberOfFiles={ numberOfFiles }
+        />
+    }
     <Pieces
       orientation={ orientation }
       position={ fen }
@@ -80,5 +87,6 @@ SimpleChessboard.defaultProps = {
   highlights: [],
   arrows: [],
   numberOfFiles: BOARD_SIZE,
-  numberOfRanks: BOARD_SIZE
+  numberOfRanks: BOARD_SIZE,
+  coordinates: "auto"
 };

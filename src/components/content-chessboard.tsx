@@ -13,7 +13,7 @@ const BOARD_SIZE_REGEX = /\b([1-8])x([1-8])\b/;
 const HIGHLIGHT_REGEX = /\b([RGBY])([a-h][1-8])\b/g;
 const ARROW_REGEX = /\b([RGBY])([a-h][1-8])([a-h][1-8])\b/g;
 const COMMENT_REGEX = /{([^}]+)}/;
-const MAX_WIDTH = parseInt(TAILWIND_CONFIG.theme.screens.sm, 10);
+const MAX_WIDTH = parseInt(TAILWIND_CONFIG.theme.screens.md, 10);
 const MAX_NUMBER_OF_SQUARES_TO_SCALE = 6;
 
 const COLORS: Record<string, Color> = {
@@ -80,6 +80,12 @@ function parseComment(customFormatting: string) {
   return match[1];
 }
 
+type ContentChessboardProps = {
+  className?: string,
+  content: string,
+  coordinates: "auto" | "never"
+}
+
 /**
  * This is a special wrapper for this blog's chessboard that can take either custom-formatted FENs
  * or PGNs. It's smart enough to tell the difference, as well as to parse the content and put it
@@ -99,7 +105,7 @@ function parseComment(customFormatting: string) {
  *   * Comment: A comment can be included with the format `{<comment>}`.
  * * A valid PGN, including comments. (TODO)
  */
-export function ContentChessboard({ content }: { content: string }) {
+export function ContentChessboard({ content, className, coordinates }: ContentChessboardProps) {
   const [ fen, ...remainingLines ] = content.split("\n");
   const customFormatting = remainingLines.join(" ");
 
@@ -113,13 +119,14 @@ export function ContentChessboard({ content }: { content: string }) {
       ? MAX_WIDTH
       : numberOfFiles / MAX_NUMBER_OF_SQUARES_TO_SCALE * MAX_WIDTH;
 
-    return <figure className={ "my-4 mx-auto" } style={ { maxWidth } }>
+    return <figure className={ `${ className } mx-auto` } style={ { maxWidth } }>
       <SimpleChessboard
         fen={ fen }
         highlights={ highlights }
         arrows={ arrows }
         numberOfFiles={ numberOfFiles }
         numberOfRanks={ numberOfRanks }
+        coordinates={ coordinates }
       />
       {
         comment
@@ -133,3 +140,7 @@ export function ContentChessboard({ content }: { content: string }) {
 
   throw new Error("The content of this code block could not be parsed!");
 }
+
+ContentChessboard.defaultProps = {
+  coordinates: "auto"
+};
