@@ -47,10 +47,7 @@ export function SimpleChessboard({
   const viewBoxHeight = numberOfRanks * SQUARE_SIZE;
 
   // TODO: Add a border.
-  return <svg
-    className="max-w-sm mx-auto"
-    viewBox={ `0 0 ${ viewBoxWidth } ${ viewBoxHeight }` }
-  >;
+  return <svg viewBox={ `0 0 ${ viewBoxWidth } ${ viewBoxHeight }` }>
     <Squares
       numberOfRanks={ numberOfRanks }
       numberOfFiles={ numberOfFiles }

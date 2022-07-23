@@ -1,5 +1,6 @@
 import React from "react";
 
+import { BOARD_SIZE } from "../constants";
 import { Arrow, Color, Highlight, Square } from "../types";
 import { isFenValid } from "../utilities/fen";
 import { SimpleChessboard } from "./simple-chessboard";
@@ -7,6 +8,7 @@ import { SimpleChessboard } from "./simple-chessboard";
 const BOARD_SIZE_REGEX = /\b([1-8])x([1-8])\b/;
 const HIGHLIGHT_REGEX = /\b([RGBY])([a-h][1-8])\b/g;
 const ARROW_REGEX = /\b([RGBY])([a-h][1-8])([a-h][1-8])\b/g;
+const MAX_WIDTH = 640;
 
 const COLORS: Record<string, Color> = {
   R: "red",
@@ -19,19 +21,19 @@ type ColorsKey = keyof typeof COLORS;
 
 function parseBoardSize(content?: string) {
   if (!content) {
-    return [];
+    return [ BOARD_SIZE, BOARD_SIZE ];
   }
 
   const match = content.match(BOARD_SIZE_REGEX);
 
   if (!match) {
-    return {};
+    return [ BOARD_SIZE, BOARD_SIZE ];
   }
 
-  return {
-    numberOfFiles: parseInt(match[1], 10),
-    numberOfRanks: parseInt(match[2], 10)
-  };
+  return [
+    parseInt(match[1], 10),
+    parseInt(match[2], 10)
+  ];
 }
 
 function parseHighlights(content?: string): Highlight[] {
@@ -80,16 +82,21 @@ export function ContentChessboard({ content }: { content: string }) {
   const customFormatting = remainingLines.join(" ");
 
   if (isFenValid(fen)) {
-    const boardSizeProps = parseBoardSize(customFormatting);
+    const [ numberOfFiles, numberOfRanks ] = parseBoardSize(customFormatting);
+
     const highlights = parseHighlights(customFormatting);
     const arrows = parseArrows(customFormatting);
 
-    return <div className="my-4">
+    return <div
+      className={ "my-4 mx-auto" }
+      style={ { maxWidth: numberOfFiles / BOARD_SIZE * MAX_WIDTH } }
+    >
       <SimpleChessboard
         fen={ fen }
         highlights={ highlights }
         arrows={ arrows }
-        { ...boardSizeProps }
+        numberOfFiles={ numberOfFiles }
+        numberOfRanks={ numberOfRanks }
       />
     </div>;
   }
