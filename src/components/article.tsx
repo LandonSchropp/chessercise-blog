@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { Link } from "gatsby";
 import { MDXRenderer } from "gatsby-plugin-mdx";
 import React from "react";
 import { Helmet } from "react-helmet";
@@ -16,9 +17,12 @@ export function Article({ article, content }: ArticleProps) {
       <meta name="Author" content="Landon Schropp" />
       <meta name="description" content={ article.description } />
     </Helmet>
-    <header className="my-4">
-      <h1 className="text-center my-1 font-serif font-extrabold">{ article.title }</h1>
-      <div className="block my-1 text-center italic text-emperor">
+    <header className="my-4 text-center text-emperor">
+      <div className="italic">
+        <Link className="text-inherit " to="/">Chessercise</Link>
+      </div>
+      <h1 className="my-0 font-serif font-bold">{ article.title }</h1>
+      <div className="block my-1 text-center italic">
         <span>Landon Schropp</span>
         { " " }
         <span>•</span>
