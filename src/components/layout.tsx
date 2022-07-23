@@ -1,6 +1,8 @@
 import React, { ReactNode } from "react";
 import { Helmet } from "react-helmet";
 
+import { CustomMDXProvider } from "./custom-mdx-provider";
+
 type LayoutProps = {
   children: ReactNode
 };
@@ -22,6 +24,8 @@ export function Layout({ children }: LayoutProps) {
       { /* Increase the font size as the screen gets larger. */ }
       <html className="text-[18px] lg:text-[20px] xl:text-[22px] font-serif text-mineShaft" />
     </Helmet>
-    { children }
+    <CustomMDXProvider>
+      { children }
+    </CustomMDXProvider>
   </main>;
 }
