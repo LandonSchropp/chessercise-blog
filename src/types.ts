@@ -1,7 +1,7 @@
 export type Article = {
   title: string,
   slug: string,
-  date: Date,
+  date: string,
   description: string,
   published: boolean
 };

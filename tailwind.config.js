@@ -47,7 +47,10 @@ module.exports = {
     },
     spacing: _.mapValues(defaultTheme.spacing, (value, key) => {
       return /^[\d.]+$/.test(key) ? `${ parseFloat(key) * BASE_SPACING }rem` : value;
-    })
+    }),
+    scale: {
+      flip: "-1"
+    }
   },
   plugins: []
 };

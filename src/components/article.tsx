@@ -1,5 +1,7 @@
+import { format } from "date-fns";
 import { MDXRenderer } from "gatsby-plugin-mdx";
 import React from "react";
+import { Helmet } from "react-helmet";
 
 import { Article as ArticleType } from "../types";
 
@@ -10,7 +12,23 @@ type ArticleProps = {
 
 export function Article({ article, content }: ArticleProps) {
   return <article className="article">
-    <h1>{ article.title }</h1>
+    <Helmet>
+      <meta name="Author" content="Landon Schropp" />
+      <meta name="description" content={ article.description } />
+    </Helmet>
+    <header className="my-4">
+      <h1 className="text-center my-1 font-serif font-extrabold">{ article.title }</h1>
+      <div className="block my-1 text-center italic text-emperor">
+        <span>Landon Schropp</span>
+        { " " }
+        <span>•</span>
+        { " " }
+        <time dateTime={ article.date }>
+          { format(new Date(article.date), "PPP") }
+        </time>
+      </div>
+      <hr className="w-20 mx-auto my-4" />
+    </header>
 
     <MDXRenderer>
       { content }

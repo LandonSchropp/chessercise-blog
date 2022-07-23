@@ -23,6 +23,7 @@
     "@types/react-helmet": "^6.1.5",
     "autoprefixer": "^10.4.7",
     "chess.js": "https://github.com/jhlywa/chess.js#dev",
+    "date-fns": "^2.29.1",
     "gatsby": "^4.18.2",
     "gatsby-plugin-google-analytics": "^4.18.0",
     "gatsby-plugin-manifest": "^4.18.1",
