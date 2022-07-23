@@ -143,7 +143,7 @@ export function fenPositionsEqual(fen1: string, fen2: string) {
  * Returns true if the FEN is valid.
  */
 export function isFenValid(fen: string) {
-  return validateFenChessJS(fen).valid;
+  return validateFenChessJS(sanitizeFEN(fen)).valid;
 }
 
 /**
@@ -159,6 +159,7 @@ function validateFen(fen: string) {
  * Returns the starting player from the FEN.
  */
 export function startingPlayer(fen: string) {
+  fen = sanitizeFEN(fen);
   const player = splitFEN(fen)[1];
 
   if (_.isNil(player)) {
@@ -172,6 +173,7 @@ export function startingPlayer(fen: string) {
  * Returns a new FEN string with an altered starting player.
  */
 export function setFenStartingPlayer(fen: string, player: Player) {
+  fen = sanitizeFEN(fen);
   validateFen(fen);
 
   const fenParts = splitFEN(fen);
@@ -194,6 +196,7 @@ const FEN_CASTLE_SYMBOLS = {
  * Returns true or false depending on whether the given player can castle on the given side.
  */
 export function fenCanCastle(fen: string, player: Player, side: Side) {
+  fen = sanitizeFEN(fen);
   validateFen(fen);
 
   return splitFEN(fen)[2].includes(FEN_CASTLE_SYMBOLS[player][side]);
@@ -203,6 +206,7 @@ export function fenCanCastle(fen: string, player: Player, side: Side) {
  * Returns a new FEN string with altered castling rights.
  */
 export function setFenCanCastle(fen: string, player: Player, side: Side, canCastle: boolean) {
+  fen = sanitizeFEN(fen);
   validateFen(fen);
 
   let castlingRights = PLAYERS.map(playerValue => {

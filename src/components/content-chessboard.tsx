@@ -4,7 +4,7 @@ import { Arrow, Color, Highlight, Square } from "../types";
 import { isFenValid } from "../utilities/fen";
 import { SimpleChessboard } from "./simple-chessboard";
 
-const BOARD_SIZE_REGEX = /\b([1-8])x([1-8])\b/g;
+const BOARD_SIZE_REGEX = /\b([1-8])x([1-8])\b/;
 const HIGHLIGHT_REGEX = /\b([RGBY])([a-h][1-8])\b/g;
 const ARROW_REGEX = /\b([RGBY])([a-h][1-8])([a-h][1-8])\b/g;
 
@@ -22,7 +22,7 @@ function parseBoardSize(content?: string) {
     return [];
   }
 
-  const match = BOARD_SIZE_REGEX.exec(content);
+  const match = content.match(BOARD_SIZE_REGEX);
 
   if (!match) {
     return {};
