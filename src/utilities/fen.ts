@@ -69,6 +69,19 @@ export function parsePosition(fen: string): NullablePlayerPiece[][] {
 }
 
 /**
+ * Resizes a parsed position to the provided number of files and number of ranks.
+ */
+export function resizeParsedPosition(
+  position: NullablePlayerPiece[][],
+  numberOfFiles: number,
+  numberOfRanks: number
+): NullablePlayerPiece[][] {
+  return position
+    .slice(-numberOfRanks)
+    .map(rank => rank.slice(0, numberOfFiles));
+}
+
+/**
  * Determines how many spaces have been occupied in a line of a FEN placement.
  */
 function placementLineLength(line: string) {

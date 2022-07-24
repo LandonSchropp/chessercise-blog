@@ -17,11 +17,13 @@ import {
   WHITE_PAWN,
   WHITE_QUEEN,
   WHITE_ROOK } from "../../src/constants";
+import { NullablePlayerPiece } from "../../src/types";
 import {
   fenCanCastle,
   fenPositionsEqual,
   isFenValid,
   parsePosition,
+  resizeParsedPosition,
   sanitizeFEN,
   setFenCanCastle,
   setFenStartingPlayer,
@@ -123,6 +125,30 @@ describe("parsePosition", () => {
     it("fills the missing values with null", () => {
       expect(parsePosition("2p/2kp/1Q/P")).toEqual(PARSED_PARTIAL_POSITION);
     });
+  });
+});
+
+// TODO: This should be more thoroughly tested.
+describe("resizeParsedPosition", () => {
+  let position: NullablePlayerPiece[][];
+
+  beforeEach(() => position = parsePosition(STARTING_POSITION));
+
+  it("resizes the position", () => {
+    const expectedPosition = [
+      new Array(5).fill(BLACK_PAWN),
+      ...PARSED_EMPTY_POSITION.slice(0, 4).map(rank => rank.slice(0, 5)),
+      new Array(5).fill(WHITE_PAWN),
+      [
+        WHITE_ROOK,
+        WHITE_KNIGHT,
+        WHITE_BISHOP,
+        WHITE_QUEEN,
+        WHITE_KING
+      ]
+    ];
+
+    expect(resizeParsedPosition(position, 5, 7)).toEqual(expectedPosition);
   });
 });
 
