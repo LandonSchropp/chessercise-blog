@@ -17,9 +17,9 @@ export function Article({ article, content }: ArticleProps) {
       <meta name="Author" content="Landon Schropp" />
       <meta name="description" content={ article.description } />
     </Helmet>
-    <header className="my-4 text-center text-emperor">
+    <header className="my-4 text-center text-scriptInk">
       <div className="italic">
-        <Link className="text-inherit " to="/">Chessercise</Link>
+        <Link className="text-inherit no-underline hover:underline" to="/">Chessercise</Link>
       </div>
       <h1 className="my-0 font-serif font-bold">{ article.title }</h1>
       <div className="block my-1 text-center italic">

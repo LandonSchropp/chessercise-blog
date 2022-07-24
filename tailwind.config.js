@@ -31,6 +31,7 @@ module.exports = {
         blackOut: "#1b1c21",
         mineShaft: "#292b33",
         emperor: "#484a54",
+        scriptInk: "#60626c",
         gray: "#81838f",
         greatFalls: "#a1a4b3",
         cerebral: "#bec1cc",
