@@ -72,6 +72,8 @@ export function SimpleChessboard({
     <Pieces
       orientation={ orientation }
       position={ fen }
+      numberOfRanks={ numberOfRanks }
+      numberOfFiles={ numberOfFiles }
     />
     <Arrows
       orientation={ orientation }

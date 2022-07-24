@@ -1,21 +1,29 @@
 import React from "react";
 
 import { Player } from "../../types";
-import { parsePosition } from "../../utilities/fen";
+import { parsePosition, resizeParsedPosition } from "../../utilities/fen";
 import { Piece } from "./piece";
 
 /* eslint-disable react/no-array-index-key */
 
 type PiecesProps = {
   position: string,
-  orientation: Player
+  orientation: Player,
+  numberOfRanks: number,
+  numberOfFiles: number
 }
 
 export function Pieces({
   position,
-  orientation
+  orientation,
+  numberOfRanks,
+  numberOfFiles
 }: PiecesProps) {
-  const parsedPosition = parsePosition(position);
+  const parsedPosition = resizeParsedPosition(
+    parsePosition(position),
+    numberOfFiles,
+    numberOfRanks
+  );
 
   return <g className="simple-chessboard__pieces">
     {
