@@ -19,7 +19,7 @@ function ChessboardCode({ children: content }: { children: JSX.Element }) {
   return <ContentChessboard className="mx-auto my-4" content={ content } />;
 }
 
-function Columns({ children }: { children: JSX.Element }) {
+function ColumnList({ children }: { children: JSX.Element }) {
   return <section className="flex gap-4 my-4">
     { children }
   </section>;
@@ -38,7 +38,7 @@ export function CustomMDXProvider({ children }: { children: JSX.Element }) {
   const components = {
     pre: Identity,
     code: ChessboardCode,
-    Columns,
+    ColumnList,
     Column
   };
 
