@@ -1,13 +1,9 @@
 import React from "react";
-import resolveConfig from "tailwindcss/resolveConfig";
 
-import tailwindConfig from "../../tailwind.config.js";
 import { BOARD_SIZE } from "../constants";
 import { Arrow, Color, Highlight, Square } from "../types";
 import { isFenValid } from "../utilities/fen";
 import { SimpleChessboard } from "./simple-chessboard";
-
-const TAILWIND_CONFIG = resolveConfig(tailwindConfig);
 
 const BOARD_SIZE_REGEX = /\b([1-8])x([1-8])\b/;
 const HIGHLIGHT_REGEX = /\b([RGBY])([a-h][1-8])\b/g;
