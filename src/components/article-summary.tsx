@@ -12,7 +12,7 @@ export function ArticleSummary({ article }: ArticleProps) {
     className={
       "block my-4 thick-left-border text-inherit hover:no-underline transition-all "
         + "hover:border-shadow focus-visible:border-shadow border-l-mediumPurple "
-        + "focus:outline-none"
+        + "focus:outline-none no-underline"
     }
     to={ `/${ article.slug }` }
   >
