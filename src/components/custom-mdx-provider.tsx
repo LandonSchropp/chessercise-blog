@@ -20,7 +20,7 @@ function ChessboardCode({ children: content }: { children: JSX.Element }) {
 }
 
 function ColumnList({ children }: { children: JSX.Element }) {
-  return <section className="flex gap-4 my-4">
+  return <section className="flex gap-4 my-4 flex-col md:flex-row">
     { children }
   </section>;
 }
