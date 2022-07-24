@@ -239,8 +239,8 @@ describe("isFenValid", () => {
 
   describe("when the FEN is valid when sanitized", () => {
 
-    it("returns false", () => {
-      expect(isFenValid(STARTING_POSITION_POSITION)).toEqual(false);
+    it("returns true", () => {
+      expect(isFenValid(STARTING_POSITION_POSITION)).toEqual(true);
     });
   });
 
@@ -256,8 +256,8 @@ describe("startingPlayer", () => {
 
   describe("when the FEN does not have a starting player", () => {
 
-    it("throws an error", () => {
-      expect(() => startingPlayer(STARTING_POSITION_POSITION)).toThrow();
+    it("sets the starting player to white", () => {
+      expect(startingPlayer(STARTING_POSITION_POSITION)).toEqual(WHITE);
     });
   });
 
