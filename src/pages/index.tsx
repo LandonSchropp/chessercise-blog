@@ -37,10 +37,6 @@ type IndexPageProps = {
 }
 
 export default function IndexPage({ data: { articles } }: IndexPageProps) {
-  // FIX: This is a temporary hack to be able to design the layout since I don't have very many
-  // articles at the moment.
-  articles = new Array(10).fill(articles[0]);
-
   return <Layout>
     <Header />
     <section className="my-8">
