@@ -13,7 +13,7 @@ const BOARD_SIZE_REGEX = /\b([1-8])x([1-8])\b/;
 const HIGHLIGHT_REGEX = /\b([RGBY])([a-h][1-8])\b/g;
 const ARROW_REGEX = /\b([RGBY])([a-h][1-8])([a-h][1-8])\b/g;
 const COMMENT_REGEX = /{([^}]+)}/;
-const MAX_WIDTH = parseInt(TAILWIND_CONFIG.theme.screens.md, 10);
+const MAX_WIDTH = 540;
 const MAX_NUMBER_OF_SQUARES_TO_SCALE = 6;
 
 const COLORS: Record<string, Color> = {
