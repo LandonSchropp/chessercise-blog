@@ -1,7 +1,6 @@
 const ARTICLES_DATABASE_ID = "1016394a8b7048148b942da2dc2abe55";
 
 module.exports = {
-  pathPrefix: "/chessercise-blog",
   siteMetadata: {
     title: `Chessercise Blog`,
     siteUrl: `https://blog.chessercise.xyz`
